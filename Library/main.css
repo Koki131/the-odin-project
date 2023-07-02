@@ -1,0 +1,13 @@
+#add-book-form .element {
+    display: grid;
+    grid-template: 1fr / 1fr 5fr;
+}
+
+
+#add-form {
+    display: none;
+}
+
+#display-books {
+    display: none;
+}

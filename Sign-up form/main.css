@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&family=Roboto:wght@100;400&family=Ubuntu:wght@300&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+.image-container {
+    display: flex;
+}
+
+.image-container .form-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.image-container .text {
+    font-family: 'Ubuntu', sans-serif;
+    width: 70%;
+    padding: 50px;
+}
+
+.image-containmer h3 {
+    
+}
+
+.image-container .image {
+    height: 100vh;
+    width: 100vw;
+    overflow: none;
+    background: url(https://images.unsplash.com/photo-1585202900225-6d3ac20a6962?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+}
+
+.image-container .image img {
+    width: 100%;
+    height: 20%;
+    background: rgba(13, 13, 13, 0.65);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    margin-top: 20%;
+}
+
+.image-container form {
+    background: #ffffff;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 65vw;
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+}
+
+.image-container .form-container {
+    background: #dadada5e;
+}
+
+.image-container .form #first, #second {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 100%;
+    margin: 30px;
+}
+
+.image-container .form input {
+    border: 0.1px solid #E5E7EB;
+    padding: 10px;
+    border-radius: 5px;
+
+}
+
+.image-container .form input:focus {
+    outline: none;
+    border: 1px solid #4077ee;
+}
+
+.image-container .form h3 {
+    font-size: 2em;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.image-container .form label {
+    margin-top: 20px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: bold;
+    padding: 5px;
+}
+
+
+.image-container .form #first {
+    float: left;
+}
+
+.image-container .form #second {
+    float: right
+}
+
+.image-container #button {
+    padding: 40px;
+}
+
+.image-container #account-btn {
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    border-radius: 8px;
+    border: 0px;
+    background-color: #596D48;
+    width: 12vw;
+    height: 3vw;
+}
+
+.image-container #account-btn p {
+    font-size: 1.5em;
+    color: white;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.image-container #button #login {
+    margin-top: 10px;
+    padding: 10px;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.image-container #button #login a {
+    text-decoration: none;
+    transition: 0.3s ease-in-out; 
+}
+
+.image-container #button #login a:hover {
+    color: #77ff00;
+}
+ 
+
+.image-container #account-btn:hover {
+    background-color: #596D48;
+    cursor: pointer;
+}
+
+.image-container #account-btn:active {
+  background-color: rgba(2, 39, 2, 0.63);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  transform: translateY(1px);
+}
