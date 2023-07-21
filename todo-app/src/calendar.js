@@ -42,6 +42,7 @@ const dayFactory = function(day) {
 
         switch (task.project) {
             case "home":
+                console.log('im in');
                 tasks.home.push(task);
                 break;
             case "school":
@@ -222,6 +223,7 @@ const makeCalendarItemsClickable = function(calendarContent) {
 
     const currentMonthDate = calendarContent.querySelectorAll('.current-month-date');
     const formContainer = document.querySelector('.form-container');
+    const globalFormContainer = document.querySelector('#global-form-container');
     const taskContainer = document.querySelector('.task-container');
 
     const title = document.querySelector('#title');
@@ -231,7 +233,7 @@ const makeCalendarItemsClickable = function(calendarContent) {
     project.style.display = 'block';
 
 
-    const form = document.querySelector('.form form');
+    const form = formContainer.querySelector('.form form');
 
     const closeLink = document.querySelectorAll('#close a');
     
@@ -278,7 +280,7 @@ const makeCalendarItemsClickable = function(calendarContent) {
         link.addEventListener('click', function(event) {
 
             event.preventDefault();
-    
+            globalFormContainer.style.display = 'none';
             formContainer.style.display = 'none';
             taskContainer.style.display = 'none';
 
@@ -636,7 +638,7 @@ const displayAll = function() {
 }
 
 const addGlobalTask = function() {
-    addTaskGlobally();
+    addTaskGlobally(currentMonth, currentYear, dayContainer, dayFactory, taskFactory, yearContainer, monthContainer);
 }
 
 export { calendar, homeCalendar, workCalendar, schoolCalendar, populateCalendar, updateCalendar, displayAll, makeCalendarItemsClickable, addGlobalTask };

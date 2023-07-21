@@ -62,7 +62,55 @@
                         <label for="description">Description</label>
                         <input type="text" name="description" id="description" placeholder="Description">
                     </div>
-                    <div id="task-date-container" style="display: none;">
+                    <div>
+                        <label for="priority">Priority</label>
+                        <select name="priority" id="priority">
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="project">Project</label>
+                        <select name="project" id="project">
+                            <option value="home">Home</option>
+                            <option value="work">Work</option>
+                            <option value="school">School</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="submit-button">
+                    <input type="submit" value="Add Task">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="global-form-container">
+
+        <div id="global-form">
+
+            <form action="#">
+
+                <div id="close-date">
+                    <div id="close-task-date">
+
+                    </div>
+                    <div id="close">
+                        <a href="#"><i class="fa-solid fa-x"></i></a>
+                    </div>
+                </div>
+
+                <div id="input-fields">
+                    <div>
+                        <label for="title">Title</label>
+                        <input type="text" name="title" id="title" placeholder="Title" required>
+                    </div>
+                    <div>
+                        <label for="description">Description</label>
+                        <input type="text" name="description" id="description" placeholder="Description">
+                    </div>
+                    <div id="task-date-container">
                         <label for="task-date">Date</label>
                         <input type="date" name="task-date" id="task-date" placeholder="Date" required>
                     </div>
@@ -86,6 +134,7 @@
                 <div id="submit-button">
                     <input type="submit" value="Add Task">
                 </div>
+
             </form>
         </div>
     </div>

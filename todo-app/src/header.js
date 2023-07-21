@@ -3,7 +3,8 @@ import { makeCalendarItemsClickable, calendar, populateCalendar } from "./calend
 
 const taskContainer = document.querySelector('.task-container');
 const taskContent = taskContainer.querySelector('#task-tasks');
-const formContainer = document.querySelector('.form-container');
+const formContainer = document.querySelector('#global-form-container');
+
 
 
 const days = document.querySelector('#days');
@@ -239,24 +240,70 @@ const displayAllTasks = function(yearContainer, displayTasksH3) {
 
                 taskContent.appendChild(monthDiv);
             }
-
-
            
 
         }
 
-    }
-
-
-     
+    } 
 
 }
 
-const addTaskGlobally = function() {
+const addTaskGlobally = function(currentMonth, currentYear, dayContainer, dayFactory, taskFactory, yearContainer, monthContainer) {
 
-    const inputFields = document.querySelector('#input-fields');
+
+    const form = formContainer.querySelector('#global-form form');
+
+    const taskDate = form.querySelector('#task-date');
+    taskDate.min = new Date().toISOString().split('T')[0];
+
 
     formContainer.style.display = 'block';
+
+    form.onsubmit = function(event) {
+        event.preventDefault();
+
+        const title = form.querySelector('#title');
+        const description = form.querySelector('#description');
+        const project = form.querySelector('#project');
+        const priority = form.querySelector('#priority');
+
+
+        const date = new Date(Date.parse(taskDate.value));
+
+  
+
+        const year = date.getFullYear();
+        const day = date.getDate();
+        const month = date.getMonth();
+
+
+
+        
+
+        if (!yearContainer.has(year)) {
+            monthContainer.set(month, []);
+            yearContainer.set(year, monthContainer);
+        } else if (yearContainer.get(year).get(month) == undefined){
+            yearContainer.get(year).set(month, []);
+        }
+
+        yearContainer.get(year).get(month)[day] = dayContainer[day];
+
+        let submittedDate = yearContainer.get(year).get(month)[day];
+
+        submittedDate.addTask(taskFactory(title.value, description.value, priority.value, project.value));
+
+        if (currentMonth == month && currentYear == year) {
+            calendarContent.innerHTML = "";
+            days.innerHTML = "";
+            populateCalendar();
+        }
+        
+
+
+        
+
+    }
 }
 
 export { displayAllTasks, addTaskGlobally };
