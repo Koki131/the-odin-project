@@ -26,7 +26,13 @@
     
 }
 #tasks div {
-    /* border: 1px solid red; */
+
+}
+
+#tasks #display-task-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .plus-container {
@@ -39,6 +45,22 @@
 .plus-container:hover {
     cursor: pointer;
     box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+}
+
+#project {
+    grid-area: project;
+}  
+#title {
+    grid-area: title;
+}
+#description {
+    grid-area: description;
+}
+#priority {
+    grid-area: priority;
+}
+#task-date-container {
+    grid-area: task-date-container;
 }
 
 #header {
@@ -78,18 +100,22 @@
 } 
 
 #header #header-display-all {
-    border-radius: 50%;
-    background-color: white;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     padding: 0.5em;
     font-size: 1.1em;
 }
 
-#header #header-display-all:hover {
+#header #header-display-all a:hover {
     cursor: pointer;
-    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    color: rgb(0, 178, 248) !important;
 }
 
+#header #header-plus a:visited, #header #header-display-all a:visited {
+    color: black;
+}
+
+#header #header-plus a, #header #header-display-all a {
+    text-decoration: none;
+}
 
 #sidebar {
     grid-area: sidebar;
@@ -107,18 +133,23 @@
 }
 
 .active {
-    color: red;
+    color: rgb(0, 217, 255) !important;
 }
 
 
 #sidebar a {
     text-decoration: none;
     font-size: 1.2em;
+
 }
 
-#sidebar a:active {
-    color: cornflowerblue;
+#sidebar a:visited {
+    color: black;
+    
 }
+
+
+
 
 #dropdown-content {
     margin-top: 2em;
@@ -143,6 +174,7 @@
     gap: 10px;
     padding: 10px;
     grid-template: 1fr 1fr 10fr / 1fr;
+
 }
 
 #month-year {
@@ -218,6 +250,11 @@
     /* border: 1px solid red; */
 }
 
+form {
+    overflow: auto;
+}
+
+
 #global-form-container, .form-container {
     display: none;
     width: 100%;
@@ -228,6 +265,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: rgba(0, 0, 0, 0.3);
+    z-index: 100;
 }
 
 #global-form-container #global-form, .form-container .form {
@@ -273,11 +311,68 @@
     font-size: 1.5em;
 }
 
-#global-form-container #global-form form #input-fields, .form-container .form form #input-fields {
+#global-form-container #global-form form #input-fields {
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(2, 1fr);
+    grid-template-areas: 
+        "title description"
+        "task-date-container task-date-container"
+        "priority project"
+    ;
+}
+
+#global-form-container #global-form form #input-fields #title, #global-form-container #global-form form #input-fields #description {
+    width: 60%;
+    height: 2em;
+}
+
+
+#global-form-container #global-form form #input-fields #task-date, 
+#global-form-container #global-form form #input-fields #priority, 
+#global-form-container #global-form form #input-fields #project {
+    width: 30%;
+    height: 2em;
+}
+
+
+.submit-button {
+    width: 5em;
+    height: 3em;
+}
+#input-fields label {
+    margin-right: 10px;
+}
+
+#global-form-container #global-form form div {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: row;
+    margin: 10px;
 }
+
+.form-container .form form #input-fields {
+    display: grid;
+    grid-template: repeat(2, 1fr) / repeat(2, 1fr);
+    grid-template-areas: 
+        "title project"
+        "description priority"
+    ;
+}
+
+
+.form-container .form form #input-fields #title, .form-container .form form #input-fields #description {
+    width: 60%;
+    height: 2em;
+}
+
+
+.form-container .form form #input-fields #priority, 
+.form-container .form form #input-fields #project {
+    width: 30%;
+    height: 2em;
+}
+
 
 
 #global-form-container #global-form form #submit-button, .form-container .form form #submit-button {
@@ -287,8 +382,12 @@
 }
 
 
-#global-form-container #global-form form div, .form-container .form form div {
-    border: 1px solid red;
+.form-container .form form div {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
 }
 
 .task-container {
@@ -303,6 +402,7 @@
     background-color: rgba(0, 0, 0, 0.3);
     height: 100%;
     width: 100%;
+    z-index: 100;
 }
 
 .task-container #tasks {
@@ -323,17 +423,44 @@
     grid-template: 1fr / repeat(2, 1fr);
 }
 
+.task-container #tasks #task-date-close #close {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+.task-container #tasks #task-date-close #close a {
+    margin-right: 50px;
+    font-size: 1.3em;
+}
+
 .task-container #tasks #task-tasks {
     overflow: auto;
 }
 
+.task-container #tasks #task-tasks div {
+    overflow: auto;
+}
+.task-container #tasks #task-tasks {
+    padding: 10px;
+}
+
+.task-container #tasks #task-tasks a {
+    border-radius: 50%;
+    transition: 0.3s ease;
+}
+.task-container #tasks #task-tasks a:hover {
+    cursor: pointer;
+}
 
 
 
 
 @media only screen and (max-width: 1700px) {
     #input-fields {
-        flex-direction: column;
+        display: flex !important;
+        flex-direction: column !important;
+
     }
 }
 

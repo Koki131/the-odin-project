@@ -3,9 +3,14 @@ import { populateCalendarDynamically } from "./project";
 import { displayAllTasks } from "./header";
 import { addTaskGlobally } from "./header";
 
+import 'animate.css';
+
 let date = new Date();
+let day = date.getDate();
 let year = date.getFullYear();
 let month = date.getMonth();
+
+let calendarStart = 1;
 
 const currentMonth = month;
 const currentYear = year;
@@ -42,7 +47,6 @@ const dayFactory = function(day) {
 
         switch (task.project) {
             case "home":
-                console.log('im in');
                 tasks.home.push(task);
                 break;
             case "school":
@@ -72,6 +76,7 @@ const calendar = function() {
 
 
     let firstDay = new Date(year, month, 1).getDay();
+
 
     let lastDate = new Date(year, month + 1, 0).getDate();
 
@@ -120,6 +125,7 @@ const populateCalendar = function() {
     for (let i = 0; i < calendarDays.length; i++) {
         
         const div = document.createElement('div');
+        div.classList.add('animate__animated', 'animate__fadeIn');
         div.textContent = calendarDays[i];
 
         days.appendChild(div);
@@ -129,14 +135,21 @@ const populateCalendar = function() {
     for (let i = firstDayOfMonth; i > 0; i--) {
 
         const div = document.createElement('div');
+        div.classList.add('animate__animated', 'animate__fadeIn');
         div.classList.add("previous-month-date");
         div.textContent = lastDateOfPreviousMonth - i + 1;
 
         calendarContent.appendChild(div);
 
     }
+    
+    if (month == currentMonth) {
+        calendarStart = day;
+    } else {
+        calendarStart = 1;
+    }
 
-    for (let i = 1; i <= lastDateOfCurrMonth; i++) {
+    for (let i = calendarStart; i <= lastDateOfCurrMonth; i++) {
 
         const div = document.createElement('div');
         const divDate = document.createElement('div');
@@ -145,6 +158,7 @@ const populateCalendar = function() {
         const plusContainer = document.createElement('div');
         const plusSymbol = document.createElement('i');
 
+        div.classList.add('animate__animated', 'animate__fadeIn');
         div.classList.add('current-month-date');
         divDate.classList.add('div-date');
         divTasks.classList.add('div-tasks');
@@ -230,31 +244,38 @@ const makeCalendarItemsClickable = function(calendarContent) {
     const description = document.querySelector('#description');
     const priority = document.querySelector('#priority');
     const project = document.querySelector('#project');
-    project.style.display = 'block';
+    project.style.display = '';
 
 
     const form = formContainer.querySelector('.form form');
+    
+    const formWrapper = formContainer.querySelector('.form');
 
     const closeLink = document.querySelectorAll('#close a');
     
     const dateClose = document.querySelector('#close-task-date');
 
-    const taskDate = document.querySelector('#task-date');
+    const taskDate = document.querySelector('#display-task-date');
 
     
     dateClose.appendChild(addTaskH3);
-    taskDate.appendChild(displayTasksH3);
+
 
     const addTask = function(divTasks, divDate) {
         
         addTaskH3.textContent = `${divDate} ${calendar().months[month]} ${year}`;
-        
-        let clickedDate = yearContainer.get(year).get(month)[divDate];
 
 
          form.onsubmit = function(event) {
                  
             event.preventDefault();
+
+            
+            monthContainer.get(month)[divDate] = dayContainer[divDate];
+            yearContainer.set(year, monthContainer);
+
+            let clickedDate = yearContainer.get(year).get(month)[divDate];
+
                 
             clickedDate.addTask(taskFactory(title.value, description.value, priority.value, project.value));
             
@@ -292,14 +313,14 @@ const makeCalendarItemsClickable = function(calendarContent) {
     const displayTasks = function(divTasks, divDate) {
 
 
-
         displayTasksH3.textContent = `${divDate} ${calendar().months[month]} ${year}`;
         taskContainer.style.display = 'flex';
 
-
+        
         const tasks = document.querySelector('#task-tasks');
 
         tasks.innerHTML = "";
+        taskDate.appendChild(displayTasksH3);
 
         const home = document.createElement('div');
         const homeH3 = document.createElement('h3');
@@ -354,19 +375,31 @@ const makeCalendarItemsClickable = function(calendarContent) {
 
                     switch (currTask.project) {
                         case "home":
+
                             homeH3.textContent = "Home";
+                            home.style.border = '0.1px solid grey';
+                            home.style.margin = '10px';
+                            home.style.padding = '10px';
 
                             checkPriority(divTasks, value, clickedTasks, key, currTask, homeHigh, homeMedium, homeLow);
 
                             break;
                         case "work":
+
                             workH3.textContent = "Work";
+                            work.style.border = '0.1px solid grey';
+                            work.style.margin = '10px';
+                            work.style.padding = '10px';
 
                             checkPriority(divTasks, value, clickedTasks, key, currTask, workHigh, workMedium, workLow);
 
                             break;
                         case "school":
+
                             schoolH3.textContent = "School";
+                            school.style.border = '0.1px solid grey';
+                            school.style.margin = '10px';
+                            school.style.padding = '10px';
 
                             checkPriority(divTasks, value, clickedTasks, key, currTask, schoolHigh, schoolMedium, schoolLow);
 
@@ -420,8 +453,15 @@ const makeCalendarItemsClickable = function(calendarContent) {
 
                 currHigh.removeChild(p);
                 currHigh.removeChild(tit);
-                len = clickedTasks[key].length;
-                divTasks.textContent = len + " tasks";
+                len = clickedTasks.home.length + clickedTasks.work.length + clickedTasks.school.length;
+                divTasks.textContent = len == 1 ? len + " task" : len + " tasks";
+
+                if (len > 0) {
+                    divTasks.style.backgroundColor = '#E1EBEE';
+                } else { 
+                    divTasks.style.backgroundColor = 'white';
+                }
+            
             };
 
         }
@@ -455,8 +495,14 @@ const makeCalendarItemsClickable = function(calendarContent) {
                 currMedium.removeChild(p);
                 currMedium.removeChild(tit);
 
-                len = clickedTasks[key].length;
-                divTasks.textContent = len + " tasks";
+                len = clickedTasks.home.length + clickedTasks.work.length + clickedTasks.school.length;
+                divTasks.textContent = len == 1 ? len + " task" : len + " tasks";
+
+                if (len > 0) {
+                    divTasks.style.backgroundColor = '#E1EBEE';
+                } else { 
+                    divTasks.style.backgroundColor = 'white';
+                }
             };
 
         }
@@ -493,10 +539,18 @@ const makeCalendarItemsClickable = function(calendarContent) {
                 currLow.removeChild(tit);
 
                
-                len = clickedTasks[key].length;
-                divTasks.textContent = len + " tasks";
+                len = clickedTasks.home.length + clickedTasks.work.length + clickedTasks.school.length;
+                divTasks.textContent = len == 1 ? len + " task" : len + " tasks";
+
+                if (len > 0) {
+                    divTasks.style.backgroundColor = '#E1EBEE';
+                } else { 
+                    divTasks.style.backgroundColor = 'white';
+                }
             };
         }
+
+
 
 
 
@@ -515,17 +569,15 @@ const makeCalendarItemsClickable = function(calendarContent) {
 
         divTasks.addEventListener('click', function() {
             displayTasks(divTasks, divDate);
+            taskContainer.classList.add('animate__animated', 'animate__fadeIn');
         });
         
         plusSymbol.addEventListener('click', function() {
 
-
             
-            monthContainer.get(month)[divDate] = dayContainer[divDate];
-            yearContainer.set(year, monthContainer);
 
             formContainer.style.display = 'block';
-
+            formWrapper.classList.add('animate__animated', 'animate__fadeIn');
 
             addTask(divTasks, divDate);
             
@@ -625,13 +677,13 @@ const checkActive = function() {
 
 
 const homeCalendar = function() {
-    populateCalendarDynamically(taskFactory, addTaskH3, displayTasksH3, calendar, dayFactory, "home", year, month, calendarContent, days, selectedMonthYear, yearContainer, monthContainer, dayContainer);
+    populateCalendarDynamically(taskFactory, addTaskH3, displayTasksH3, calendar, dayFactory, "home", year, month, currentMonth, day, calendarContent, days, selectedMonthYear, yearContainer, monthContainer, dayContainer);
 }
 const workCalendar = function() { 
-    populateCalendarDynamically(taskFactory, addTaskH3, displayTasksH3, calendar, dayFactory, "work", year, month, calendarContent, days, selectedMonthYear, yearContainer, monthContainer, dayContainer);
+    populateCalendarDynamically(taskFactory, addTaskH3, displayTasksH3, calendar, dayFactory, "work", year, month, currentMonth, day, calendarContent, days, selectedMonthYear, yearContainer, monthContainer, dayContainer);
 }
 const schoolCalendar = function() {
-    populateCalendarDynamically(taskFactory, addTaskH3, displayTasksH3, calendar, dayFactory, "school", year, month, calendarContent, days, selectedMonthYear, yearContainer, monthContainer, dayContainer);
+    populateCalendarDynamically(taskFactory, addTaskH3, displayTasksH3, calendar, dayFactory, "school", year, month, currentMonth, day, calendarContent, days, selectedMonthYear, yearContainer, monthContainer, dayContainer);
 }
 const displayAll = function() {
     displayAllTasks(yearContainer, displayTasksH3);

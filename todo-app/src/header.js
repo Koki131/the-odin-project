@@ -15,10 +15,11 @@ const calendarContent = document.querySelector('#calendar');
 const displayAllTasks = function(yearContainer, displayTasksH3) {
 
 
-  
+    taskContainer.classList.add('animate__animated', 'animate__fadeIn');
 
     
     const checkPrio = function(key, value, tasks, currTask, currHigh, currMedium, currLow) {
+
 
 
         if (currTask.priority == 'High') {
@@ -41,7 +42,7 @@ const displayAllTasks = function(yearContainer, displayTasksH3) {
             p.appendChild(a);
             p.appendChild(span);
            
-            span.textContent = `   ${currTask.description}`;
+            span.textContent = `  ${currTask.description}`;
             currHigh.appendChild(p);
 
             a.onclick = function(event) {
@@ -78,7 +79,7 @@ const displayAllTasks = function(yearContainer, displayTasksH3) {
             p.appendChild(a);
             p.appendChild(span);
 
-            span.textContent = `    ${currTask.description}`;
+            span.textContent = `  ${currTask.description}`;
             currMedium.appendChild(p);
 
             a.onclick = function(event) {
@@ -88,8 +89,9 @@ const displayAllTasks = function(yearContainer, displayTasksH3) {
                 days.innerHTML = "";
                 calendarContent.innerHTML = "";
                 populateCalendar();
-                currHigh.removeChild(p);
-                currHigh.removeChild(tit);
+
+                currMedium.removeChild(p);
+                currMedium.removeChild(tit);
                 
             };
         }
@@ -120,14 +122,17 @@ const displayAllTasks = function(yearContainer, displayTasksH3) {
                 event.preventDefault();
                 
                 tasks[key] = tasks[key].filter(k => k != tasks[key][value]);
+            
                 days.innerHTML = "";
                 calendarContent.innerHTML = "";
                 populateCalendar();
-                currHigh.removeChild(p);
-                currHigh.removeChild(tit);
+
+                currLow.removeChild(p);
+                currLow.removeChild(tit);
                 
             };
         }
+
     }
 
 
@@ -135,6 +140,8 @@ const displayAllTasks = function(yearContainer, displayTasksH3) {
     taskContent.innerHTML = "";
     let keys = yearContainer.keys();
     taskContainer.style.display = 'block';
+
+
 
 
     for (let year of keys) {
@@ -152,93 +159,105 @@ const displayAllTasks = function(yearContainer, displayTasksH3) {
             if (yearContainer.get(year).get(month).length > 0) {
 
                 const monthDiv = document.createElement('div');
-                const monthH3 = document.createElement('h3');
-                monthH3.textContent = calendar().months[month];
+
                 
                 for (let day in yearContainer.get(year).get(month)) {
-                    
 
                     let tasks = yearContainer.get(year).get(month)[day].tasks;
                     
-                    const dayDiv = document.createElement('div');
-                    const monthH3 = document.createElement('h3');
-                    monthH3.textContent = day + " " + calendar().months[month];
-                    
-                    const home = document.createElement('div');
-                    const homeH3 = document.createElement('h3');
-                    const homeHigh = document.createElement('div');
-                    const homeMedium = document.createElement('div');
-                    const homeLow = document.createElement('div');
-
-                    const work = document.createElement('div');
-                    const workH3 = document.createElement('h3');
-                    const workHigh = document.createElement('div');
-                    const workMedium = document.createElement('div');
-                    const workLow = document.createElement('div');
-
-                    const school = document.createElement('div');
-                    const schoolH3 = document.createElement('h3');
-                    const schoolHigh = document.createElement('div');
-                    const schoolMedium = document.createElement('div');
-                    const schoolLow = document.createElement('div');
-                    
-                    home.appendChild(homeH3);
-                    work.appendChild(workH3);
-                    school.appendChild(schoolH3);
-
-                    home.appendChild(homeHigh);
-                    home.appendChild(homeMedium);
-                    home.appendChild(homeLow);
-
-                    work.appendChild(workHigh);
-                    work.appendChild(workMedium);
-                    work.appendChild(workLow);
-
-                    school.appendChild(schoolHigh);
-                    school.appendChild(schoolMedium);
-                    school.appendChild(schoolLow);
-                    
-                    for (let key in tasks) {
-
-                        for (let value in tasks[key]) {
-
-                            let currTask = tasks[key][value];
-
-                            if (currTask != undefined) {
-                                
-                                if (currTask.project == 'home') {
-                                    homeH3.textContent = 'Home';
-                                    checkPrio(key, value, tasks, currTask, homeHigh, homeMedium, homeLow);
+                    if (tasks.home.length > 0 || tasks.work.length > 0 || tasks.school.length > 0) {
+                            
+                        const dayDiv = document.createElement('div');
+                        const monthH3 = document.createElement('h3');
+                        monthH3.textContent = day + " " + calendar().months[month];
+                        
+                        const home = document.createElement('div');
+                        const homeH3 = document.createElement('h3');
+                        const homeHigh = document.createElement('div');
+                        const homeMedium = document.createElement('div');
+                        const homeLow = document.createElement('div');
+    
+                        const work = document.createElement('div');
+                        const workH3 = document.createElement('h3');
+                        const workHigh = document.createElement('div');
+                        const workMedium = document.createElement('div');
+                        const workLow = document.createElement('div');
+    
+                        const school = document.createElement('div');
+                        const schoolH3 = document.createElement('h3');
+                        const schoolHigh = document.createElement('div');
+                        const schoolMedium = document.createElement('div');
+                        const schoolLow = document.createElement('div');
+                        
+                        home.appendChild(homeH3);
+                        work.appendChild(workH3);
+                        school.appendChild(schoolH3);
+    
+                        home.appendChild(homeHigh);
+                        home.appendChild(homeMedium);
+                        home.appendChild(homeLow);
+    
+                        work.appendChild(workHigh);
+                        work.appendChild(workMedium);
+                        work.appendChild(workLow);
+    
+                        school.appendChild(schoolHigh);
+                        school.appendChild(schoolMedium);
+                        school.appendChild(schoolLow);
+                        
+                        
+                        for (let key in tasks) {
+    
+                            for (let value in tasks[key]) {
+    
+                                let currTask = tasks[key][value];
+    
+                                if (currTask != undefined) {
+                                    
+                                    if (currTask.project == 'home') {
+                                        homeH3.textContent = 'Home';
+                                        checkPrio(key, value, tasks, currTask, homeHigh, homeMedium, homeLow);
+                                    }
+    
+                                    if (currTask.project == 'work') {
+                                        workH3.textContent = 'Work';
+                                        checkPrio(key, value, tasks, currTask, workHigh, workMedium, workLow);
+                                    }
+    
+                                    if (currTask.project == 'school') {
+                                        schoolH3.textContent = 'School';
+                                        checkPrio(key, value, tasks, currTask, schoolHigh, schoolMedium, schoolLow);
+                                    }
+    
                                 }
-
-                                if (currTask.project == 'work') {
-                                    workH3.textContent = 'Work';
-                                    checkPrio(key, value, tasks, currTask, workHigh, workMedium, workLow);
-                                }
-
-                                if (currTask.project == 'school') {
-                                    schoolH3.textContent = 'School';
-                                    checkPrio(key, value, tasks, currTask, schoolHigh, schoolMedium, schoolLow);
-                                }
-
+    
                             }
-
-
+    
                         }
+                        
+    
+                        dayDiv.appendChild(monthH3);
+                        dayDiv.appendChild(home);
+                        dayDiv.appendChild(work);
+                        dayDiv.appendChild(school);
+                        dayDiv.style.border = '0.1px solid grey';
+                        dayDiv.style.padding = '10px';
+                        dayDiv.style.margin = '10px';
+                        monthDiv.appendChild(dayDiv);
 
-                    }
+                    } else {
+                        
+                        taskContent.innerHTML = "";
                     
+                    }
 
-                    dayDiv.appendChild(monthH3);
-                    dayDiv.appendChild(home);
-                    dayDiv.appendChild(work);
-                    dayDiv.appendChild(school);
-                    monthDiv.appendChild(dayDiv);
 
 
                 }
 
                 taskContent.appendChild(monthDiv);
+
+
             }
            
 
@@ -246,18 +265,25 @@ const displayAllTasks = function(yearContainer, displayTasksH3) {
 
     } 
 
+
+
 }
 
 const addTaskGlobally = function(currentMonth, currentYear, dayContainer, dayFactory, taskFactory, yearContainer, monthContainer) {
 
 
     const form = formContainer.querySelector('#global-form form');
+    const formWrapper = formContainer.querySelector('#global-form');
 
     const taskDate = form.querySelector('#task-date');
+    const closeTaskDate = form.querySelector('#close-task-date');
     taskDate.min = new Date().toISOString().split('T')[0];
 
 
     formContainer.style.display = 'block';
+    closeTaskDate.textContent = 'Add Task';
+    closeTaskDate.style = "font-weight: bold; font-size: 1.5em";
+    formWrapper.classList.add('animate__animated', 'animate__fadeIn');
 
     form.onsubmit = function(event) {
         event.preventDefault();
@@ -278,29 +304,30 @@ const addTaskGlobally = function(currentMonth, currentYear, dayContainer, dayFac
 
 
 
-        
-
         if (!yearContainer.has(year)) {
             monthContainer.set(month, []);
             yearContainer.set(year, monthContainer);
         } else if (yearContainer.get(year).get(month) == undefined){
+
             yearContainer.get(year).set(month, []);
         }
 
-        yearContainer.get(year).get(month)[day] = dayContainer[day];
+        if (yearContainer.get(year).get(month)[day] == undefined) {
+
+            yearContainer.get(year).get(month)[day] = dayContainer[day];
+        
+        }
 
         let submittedDate = yearContainer.get(year).get(month)[day];
 
         submittedDate.addTask(taskFactory(title.value, description.value, priority.value, project.value));
-
-        if (currentMonth == month && currentYear == year) {
-            calendarContent.innerHTML = "";
-            days.innerHTML = "";
-            populateCalendar();
-        }
         
 
-
+        calendarContent.innerHTML = "";
+        days.innerHTML = "";
+        
+        populateCalendar();
+        formContainer.style.display = 'none';
         
 
     }

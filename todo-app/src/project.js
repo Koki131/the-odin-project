@@ -1,8 +1,8 @@
 import { makeCalendarItemsClickable as clickableItems } from "./calendar";
+import 'animate.css';
 
 const projectsLink = document.querySelector('#projects-link');
 const dropdownContent = document.querySelector('#dropdown-content');
-const projectsLinkI = projectsLink.querySelector('i');
 
 
 projectsLink.addEventListener('click', function() {
@@ -11,11 +11,15 @@ projectsLink.addEventListener('click', function() {
 
         dropdownContent.style.display = 'none';
         projectsLink.classList.remove('active');
+        
+
 
     } else {
 
         dropdownContent.style.display = 'flex';
         projectsLink.classList.add('active');
+        
+        dropdownContent.classList.add('animate__animated', 'animate__fadeInLeft');
     }
 
 
@@ -23,10 +27,10 @@ projectsLink.addEventListener('click', function() {
 
 
 
-const populateCalendarDynamically = function(taskFactory, addTaskH3, displayTasksH3, calendar, dayFactory, project, year, month,  calendarContent, days, selectedMonthYear, yearContainer, monthContainer, dayContainer) {
+const populateCalendarDynamically = function(taskFactory, addTaskH3, displayTasksH3, calendar, dayFactory, project, year, month, currentMonth, day, calendarContent, days, selectedMonthYear, yearContainer, monthContainer, dayContainer) {
     
 
-        let count = 1;
+        let count = currentMonth == month ? day : 1;
 
         const divTasks = document.querySelectorAll('.div-tasks');
 
@@ -103,7 +107,7 @@ const makeCalendarItemsClickable = function(taskFactory, addTaskH3, displayTasks
     
     const dateClose = document.querySelector('#close-task-date');
 
-    const taskDate = document.querySelector('#task-date');
+    const taskDate = document.querySelector('#display-task-date');
 
     
     dateClose.appendChild(addTaskH3);
@@ -166,6 +170,9 @@ const makeCalendarItemsClickable = function(taskFactory, addTaskH3, displayTasks
         tasks.innerHTML = "";
 
         const projectContainer = document.createElement('div');
+        projectContainer.style.border = "0.1px solid grey";
+        projectContainer.style.padding = "10px";
+        projectContainer.style.margin = "10px";
         const h3 = document.createElement('h3');
         const high = document.createElement('div');
         const medium = document.createElement('div');
