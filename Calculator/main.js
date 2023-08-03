@@ -29,6 +29,8 @@ function Calculator() {
         '': (a, b) => 0
     };
 
+
+
 }
 
 let calculator = new Calculator();
@@ -39,7 +41,6 @@ buttons.forEach(button => {
 
     button.addEventListener("click", function() {
 
-        
 
         if (button.textContent === 'C') {
             
@@ -93,9 +94,14 @@ buttons.forEach(button => {
             } else if (arr[0] != '' && isOp && (!isNaN(button.textContent) || button.textContent === '.')) {
     
                 preventDecimal(button, 2); 
+            
+            } else if (button.textContent === '±') {
 
-                
-    
+                preventDecimal(button, 2);
+
+            } else if (arr[1] != '' && arr[2] == '' && button.textContent != '=' && isNaN(button.textContent)) {
+
+                arr[1] = button.textContent;
             } 
 
         } else {
@@ -151,7 +157,6 @@ buttons.forEach(button => {
         }
 
         
-
     });
     
 });
@@ -167,7 +172,7 @@ function preventDecimal(button, index) {
     
     } else {
       
-        if (arr[index].includes('.')) {
+        if (arr[index].includes('.') && button.textContent != '±') {
 
             if (decimalCount < 6) {
 
@@ -182,8 +187,10 @@ function preventDecimal(button, index) {
             }
         
         } else {
+
             if (button.textContent != '±') {
                 arr[index] += button.textContent;
+
             }
             
 

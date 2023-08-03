@@ -36,6 +36,7 @@ button {
     background-color: white ;
     margin-top: 10px;
     margin-bottom: 30px;
+    overflow: auto;
 }
 
 #result {
