@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather app</title>
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div id="header" class="input-container">
+            <div id="input">
+                <input type="text" id="location" placeholder="Enter city">
+                <button type="submit" id="form-submit">Get Weather</button>
+            </div>
+            <div id="footer"><a target="_blank" href="https://www.weatherapi.com/" title="Free Weather API"><img src='./weatherapi_logo.png' alt="Weather data by WeatherAPI.com"></a></div>
+        </div>
+        <div id="content">
+            <div id="current-container">
+
+            </div>
+            <div id="forecast-data">
+                <div id="daily-forecast">
+                    
+                </div>
+                <div id="hourly-forecast-container">
+                    <div id="left-arrow-div">
+                        <a href="#" id="left-arrow"></a>
+                    </div>
+                    <div id="hourly-forecast"></div>
+                    <div id="right-arrow-div">
+                        <a href="#" id="right-arrow"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
