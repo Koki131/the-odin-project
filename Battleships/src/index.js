@@ -12,7 +12,6 @@ class Board {
 
     createBoard = () => {
 
-
         for (let i = 0; i < 10; i++) {
 
             const row = document.createElement("div");
@@ -26,7 +25,7 @@ class Board {
                 
                 div.draggable = false;
                 div.className = "box";
-                div.id = i + "," + j;
+                div.id = i + "," + j + "," + this.board.id;
                 row.appendChild(div);
                 
             }
@@ -55,8 +54,7 @@ class Board {
         ev.preventDefault();
   
 
-        if (this.currShip[0] !== null) {
-
+        if (this.currShip[0] !== undefined) {
 
             const p = document.getElementById(this.currShip[0].id);
 
@@ -64,7 +62,6 @@ class Board {
             p.style.visibility = "visible";
     
             const data = ev.dataTransfer.getData("text/plain");
-    
             if (data !== this.currShip[0].id) return;
     
     
@@ -93,12 +90,12 @@ class Board {
                 this.currShip[0].gridPositionX = gridPositionX;
                 this.currShip[0].gridPositionY = gridPositionY;
 
-                this.currShip[0].occupyHelper(this.currShip[0]);
+                this.currShip[0].occupyHelper();
                 return;
             }
             
             
-            this.currShip[0].occupyHelper(this.currShip[0]);
+            this.currShip[0].occupyHelper();
 
             container.appendChild(element);
 
@@ -122,7 +119,6 @@ class Board {
 
         let min = Number.MAX_VALUE;
 
-
         for (let key of Object.keys(this.arr)) {
             
             const val = this.arr[key];
@@ -140,7 +136,7 @@ class Board {
         }
 
 
-        return this.currShip[0].r + "," + this.currShip[0].c;
+        return this.currShip[0].r + "," + this.currShip[0].c + "," + this.currShip[0].boardId;
     }
 
 
@@ -149,17 +145,18 @@ class Board {
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
         
-                const div = document.getElementById(i + "," + j);
+                const div = document.getElementById(i + "," + j + "," + this.board.id);
         
                 const rect = div.getBoundingClientRect();
                 const dropZoneRect = this.board.getBoundingClientRect();
-                const relativeX = rect.top - dropZoneRect.top;
-                const relativeY = rect.left - dropZoneRect.left;
-        
-                this.arr[div.id] = [relativeX, relativeY, false, false];
+                let relativeX = rect.top - dropZoneRect.top;
+                let relativeY = rect.left - dropZoneRect.left;
+                   
+                this.arr[div.id] = [relativeX, relativeY, false, false, false];
         
             }
         }
+
 
     }
 
@@ -167,16 +164,16 @@ class Board {
 
     populateBoard = () => {
 
-        const carrier = new Carrier("carrier",0,0,0,0,4,"",0,0, this.arr, this.currShip, this.ships);
-        const cruiser1 = new Cruiser("cruiser1",0,0,0,0,3,"",0,0, this.arr, this.currShip, this.ships);
-        const cruiser2 = new Cruiser("cruiser2",0,0,0,0,3,"",0,0, this.arr, this.currShip, this.ships);
-        const destroyer1 = new Destroyer("destroyer1",0,0,0,0,2,"",0,0, this.arr, this.currShip, this.ships);
-        const destroyer2 = new Destroyer("destroyer2",0,0,0,0,2,"",0,0, this.arr, this.currShip, this.ships);
-        const destroyer3 = new Destroyer("destroyer3",0,0,0,0,2,"",0,0, this.arr, this.currShip, this.ships);
-        const pb1 = new PatrolBoat("pb1",0,0,0,0,1,"",0,0, this.arr, this.currShip, this.ships);
-        const pb2 = new PatrolBoat("pb2",0,0,0,0,1,"",0,0, this.arr, this.currShip, this.ships);
-        const pb3 = new PatrolBoat("pb3",0,0,0,0,1,"",0,0, this.arr, this.currShip, this.ships);
-        const pb4 = new PatrolBoat("pb4",0,0,0,0,1,"",0,0, this.arr, this.currShip, this.ships);
+        const carrier = new Carrier("carrier" + this.board.id,0,0,0,0,4,"",0,0, this.arr, this.currShip, this.ships, this.board.id);
+        const cruiser1 = new Cruiser("cruiser1" + this.board.id,0,0,0,0,3,"",0,0, this.arr, this.currShip, this.ships, this.board.id);
+        const cruiser2 = new Cruiser("cruiser2" + this.board.id,0,0,0,0,3,"",0,0, this.arr, this.currShip, this.ships, this.board.id);
+        const destroyer1 = new Destroyer("destroyer1" + this.board.id,0,0,0,0,2,"",0,0, this.arr, this.currShip, this.ships, this.board.id);
+        const destroyer2 = new Destroyer("destroyer2" + this.board.id,0,0,0,0,2,"",0,0, this.arr, this.currShip, this.ships, this.board.id);
+        const destroyer3 = new Destroyer("destroyer3" + this.board.id,0,0,0,0,2,"",0,0, this.arr, this.currShip, this.ships, this.board.id);
+        const pb1 = new PatrolBoat("pb1" + this.board.id,0,0,0,0,1,"",0,0, this.arr, this.currShip, this.ships, this.board.id);
+        const pb2 = new PatrolBoat("pb2" + this.board.id,0,0,0,0,1,"",0,0, this.arr, this.currShip, this.ships, this.board.id);
+        const pb3 = new PatrolBoat("pb3" + this.board.id,0,0,0,0,1,"",0,0, this.arr, this.currShip, this.ships, this.board.id);
+        const pb4 = new PatrolBoat("pb4" + this.board.id,0,0,0,0,1,"",0,0, this.arr, this.currShip, this.ships, this.board.id);
 
         this.ships["carrier"] = carrier;
         this.ships["cruiser1"] = cruiser1;
@@ -202,13 +199,13 @@ class Board {
 
                 if (ship.canPlace()) {
 
-                    const key = ship.r + "," + ship.c;
+                    const key = ship.r + "," + ship.c + "," + ship.boardId;
                     const value = this.arr[key];
 
                     ship.gridPositionX = value[0];
                     ship.gridPositionY = value[1];
 
-                    ship.occupyHelper(ship);
+                    ship.occupyHelper();
 
             
                     ship.createShipElement();
@@ -225,7 +222,7 @@ class Board {
 }
 
 class Ship {
-    constructor(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships) {
+    constructor(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships, boardId) {
         this.id = id;
         this.r = r;
         this.c = c;
@@ -240,14 +237,7 @@ class Ship {
         this.arr = arr;
         this.currShip = currShip;
         this.ships = ships;
-    }
-
-    setTotal = (newTotal) => {
-        this.occupiesTotal = newTotal;
-    }
-
-    setShipTotal = (newTotal) => {
-        this.shipOccupies = newTotal;
+        this.boardId = boardId;
     }
 
     sleep = (ms) => {
@@ -306,8 +296,8 @@ class Ship {
             
             for (let i = c; i < c + this.noOfTiles; i++) {
 
-                this.shipOccupies.push(r + "," + i);
-                this.arr[r + "," + i][2] = true;
+                this.shipOccupies.push(r + "," + i + "," + this.boardId);
+                this.arr[r + "," + i + "," + this.boardId][2] = true;
 
             }
 
@@ -316,8 +306,8 @@ class Ship {
 
             for (let i = r; i < r + this.noOfTiles; i++) {
 
-                this.shipOccupies.push(i + "," + c);
-                this.arr[i + "," + c][2] = true;
+                this.shipOccupies.push(i + "," + c + "," + this.boardId);
+                this.arr[i + "," + c + "," + this.boardId][2] = true;
 
             }
 
@@ -365,16 +355,16 @@ class Ship {
 
         const r = Number.parseInt(this.r);
         const c = Number.parseInt(this.c);
-        
+
 
         if (this.orientation === "H") {
 
             if (c - 1 >= 0) {
-                if (this.arr[r + "," + (c - 1)][2]) return false;
+                if (this.arr[r + "," + (c - 1) + "," + this.boardId][2]) return false;
             }
 
             if (c + this.noOfTiles < 10) {
-                if (this.arr[r + "," + (c + this.noOfTiles)][2]) return false;
+                if (this.arr[r + "," + (c + this.noOfTiles) + "," + this.boardId][2]) return false;
             }
 
             for (let i = c - 1; i < c + this.noOfTiles + 1; i++) {
@@ -382,25 +372,25 @@ class Ship {
                 if (i < 0 || i >= 10) continue;
 
                 if (r - 1 >= 0) {
-                    if (this.arr[(r - 1) + "," + i][2]) return false;
+                    if (this.arr[(r - 1) + "," + i + "," + this.boardId][2]) return false;
                 }
 
                 if (r + 1 < 10) {
-                    if (this.arr[(r + 1) + "," + i][2]) return false;
+                    if (this.arr[(r + 1) + "," + i + "," + this.boardId][2]) return false;
                 }
 
-                if (this.arr[r + "," + i][2]) return false;
+                if (this.arr[r + "," + i + "," + this.boardId][2]) return false;
 
             }
 
         } else {
 
             if (r - 1 >= 0) {
-                if (this.arr[(r - 1) + "," + c][2]) return false;
+                if (this.arr[(r - 1) + "," + c + "," + this.boardId][2]) return false;
             }
 
             if (r + this.noOfTiles < 10) {
-                if (this.arr[(r + this.noOfTiles) + "," + c][2]) return false;
+                if (this.arr[(r + this.noOfTiles) + "," + c + "," + this.boardId][2]) return false;
             }
 
             for (let i = r - 1; i < r + this.noOfTiles + 1; i++) {
@@ -408,14 +398,14 @@ class Ship {
                 if (i < 0 || i >= 10) continue;
 
                 if (c - 1 >= 0) {
-                    if (this.arr[i + "," + (c - 1)][2]) return false;
+                    if (this.arr[i + "," + (c - 1) + "," + this.boardId][2]) return false;
                 }
 
                 if (c + 1 < 10) {
-                    if (this.arr[i + "," + (c + 1)][2]) return false;
+                    if (this.arr[i + "," + (c + 1) + "," + this.boardId][2]) return false;
                 }
 
-                if (this.arr[i + "," + c][2]) return false;
+                if (this.arr[i + "," + c + "," + this.boardId][2]) return false;
 
             }
 
@@ -428,7 +418,6 @@ class Ship {
     occupyTotal = () => {
         
         
-        
         this.unoccupyTotal();
         
 
@@ -438,17 +427,17 @@ class Ship {
         
         if (this.orientation === "H") {
 
-            if (c - 1 >= 0) this.occupiesTotal.push(r + "," + (c - 1));
-            if (c + this.noOfTiles < 10) this.occupiesTotal.push(r + "," + (c + this.noOfTiles));
+            if (c - 1 >= 0) this.occupiesTotal.push(r + "," + (c - 1) + "," + this.boardId);
+            if (c + this.noOfTiles < 10) this.occupiesTotal.push(r + "," + (c + this.noOfTiles) + "," + this.boardId);
 
             for (let i = c - 1; i < c + this.noOfTiles + 1; i++) {
 
                 if (i < 0 || i >= 10) continue;
 
-                if (r - 1 >= 0) this.occupiesTotal.push(r - 1 + "," + i);
-                if (r + 1 < 10) this.occupiesTotal.push(r + 1 + "," + i);
+                if (r - 1 >= 0) this.occupiesTotal.push((r - 1) + "," + i + "," + this.boardId);
+                if (r + 1 < 10) this.occupiesTotal.push((r + 1) + "," + i + "," + this.boardId);
 
-                this.occupiesTotal.push(r + "," + i);
+                this.occupiesTotal.push(r + "," + i + "," + this.boardId);
 
             }
 
@@ -456,17 +445,17 @@ class Ship {
 
         } else {
 
-            if (r - 1 >= 0) this.occupiesTotal.push(r - 1 + "," + c);
-            if (r + this.noOfTiles < 10) this.occupiesTotal.push((r + this.noOfTiles) + "," + c);
+            if (r - 1 >= 0) this.occupiesTotal.push((r - 1) + "," + c + "," + this.boardId);
+            if (r + this.noOfTiles < 10) this.occupiesTotal.push((r + this.noOfTiles) + "," + c + "," + this.boardId);
 
             for (let i = r - 1; i < r + this.noOfTiles + 1; i++) {
 
                 if (i < 0 || i >= 10) continue;
                 
-                if (c - 1 >= 0) this.occupiesTotal.push(i + "," + (c - 1));
-                if (c + 1 < 10) this.occupiesTotal.push(i + "," + (c + 1));
+                if (c - 1 >= 0) this.occupiesTotal.push(i + "," + (c - 1) + "," + this.boardId);
+                if (c + 1 < 10) this.occupiesTotal.push(i + "," + (c + 1) + "," + this.boardId);
 
-                this.occupiesTotal.push(i + "," + c);
+                this.occupiesTotal.push(i + "," + c + "," + this.boardId);
 
             }
  
@@ -476,15 +465,10 @@ class Ship {
 
     }
 
-    unoccupyHelper = (ship) => {
-        ship.unoccupyShipTiles();
-        ship.unoccupyTotal();
-    }
-
-    occupyHelper = (ship) => {
-        ship.occupyTotal();
-        ship.occupyTotalBoard();
-        ship.occupyShip();
+    occupyHelper = () => {
+        this.occupyTotal();
+        this.occupyTotalBoard();
+        this.occupyShip();
     }
 
     checkClickValidity = (ship) => {
@@ -545,8 +529,8 @@ class Ship {
 }
 
 class Carrier extends Ship {
-    constructor(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships) {
-        super(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships);
+    constructor(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships, boardId) {
+        super(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships, boardId);
     }
 
     clickHandler = () => {
@@ -580,7 +564,8 @@ class Carrier extends Ship {
         }
 
 
-        this.occupyHelper(this);
+
+        this.occupyHelper();
 
         
     }
@@ -609,7 +594,7 @@ class Carrier extends Ship {
 
     createShipElement = () => {
 
-        const div = document.getElementById(this.r + "," + this.c);
+        const div = document.getElementById(this.r + "," + this.c + "," + this.boardId);
 
         const p = document.createElement("p");
 
@@ -640,8 +625,8 @@ class Carrier extends Ship {
 
 
 class Cruiser extends Ship {
-    constructor(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships) {
-        super(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships);
+    constructor(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships, boardId) {
+        super(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships, boardId);
     }
 
     clickHandler = () => {
@@ -673,7 +658,7 @@ class Cruiser extends Ship {
 
         }
 
-        this.occupyHelper(this);
+        this.occupyHelper();
 
         
     }
@@ -698,7 +683,7 @@ class Cruiser extends Ship {
 
     createShipElement = () => {
 
-        const div = document.getElementById(this.r + "," + this.c);
+        const div = document.getElementById(this.r + "," + this.c + "," + this.boardId);
 
         const p = document.createElement("p");
 
@@ -726,8 +711,8 @@ class Cruiser extends Ship {
 }
 
 class Destroyer extends Ship {
-    constructor(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships) {
-        super(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships);
+    constructor(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships, boardId) {
+        super(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships, boardId);
     }
 
     clickHandler = () => {
@@ -761,7 +746,7 @@ class Destroyer extends Ship {
         }
 
 
-        this.occupyHelper(this);
+        this.occupyHelper();
 
         
     }
@@ -782,7 +767,7 @@ class Destroyer extends Ship {
 
     createShipElement = () => {
 
-        const div = document.getElementById(this.r + "," + this.c);
+        const div = document.getElementById(this.r + "," + this.c + "," + this.boardId);
 
         const p = document.createElement("p");
 
@@ -811,40 +796,20 @@ class Destroyer extends Ship {
 }
 
 class PatrolBoat extends Ship {
-    constructor(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships) {
-        super(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships);
+    constructor(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships, boardId) {
+        super(id, r, c, gridPositionX, gridPositionY, noOfTiles, orientation, currPositionX, currPositionY, arr, currShip, ships, boardId);
     }
 
     clickHandler = () => {
 
-        const ship = document.getElementById(this.id);
-        const parent = ship.parentElement;
 
         if (!this.checkClickValidity(this)) {
             this.revertStateOfBoard();
         }
 
-        if (this.orientation === "V" && this.gridPositionY >= 0 && this.gridPositionY <= 200) {
-
-            ship.style.height = "100%";
-            ship.style.width = "2.5rem";
-            parent.style.flexDirection = "column";
-            ship.style.left = 0;
-            ship.style.top = "";
-            this.orientation = "h";    
-
-        } else if (this.orientation === "H" && this.gridPositionX >= 0 && this.gridPositionX <= 200) {
-
-            ship.style.height = "2.5rem";
-            ship.style.width = "100%";
-            ship.style.top = 0;
-            ship.style.left = "";
-            parent.style.flexDirection = "row";
-            this.orientation = "V";    
-        }
 
 
-        this.occupyHelper(this);
+        this.occupyHelper();
 
         
     }
@@ -852,7 +817,7 @@ class PatrolBoat extends Ship {
 
     createShipElement = () => {
 
-        const div = document.getElementById(this.r + "," + this.c);
+        const div = document.getElementById(this.r + "," + this.c + "," + this.boardId);
 
         const p = document.createElement("p");
 
@@ -882,12 +847,192 @@ class PatrolBoat extends Ship {
 }
 
 
+class Game {
+    constructor() {
+        this.turn = 1;
+        this.board1 = null;
+        this.board2 = null;
+    }
 
-const dropZone = document.querySelector("#drop-zone");
+    isGameOver = () => {
 
-const board = new Board(dropZone);
+        if (this.turn === 1) {
+           for (const tile of Object.values(this.board2.arr)) {
+                if (tile[2]) return false;
+           }
+        } else {
+            for (const tile of Object.values(this.board1.arr)) {
+                if (tile[2]) return false;
+            }
+        }
 
-board.createBoard();
-board.addCoordinates();
-board.populateBoard();
 
+
+        return true;
+
+
+    }
+
+    makeGamePlayable = (computerBoard, playerBoard, computer, player) => {
+
+        const arr = computerBoard.arr;
+
+        for (const item of Object.keys(arr)) {
+            
+            const div = document.getElementById(item);
+
+            div.addEventListener("click", (ev) => {
+                ev.preventDefault();
+
+
+                if (this.turn === 1 && !player.attack(computerBoard, item)) {
+                    this.turn = -1
+                    while (computer.attack(playerBoard)) {}
+                    this.turn = 1;
+                }
+
+            });
+        }
+
+    }
+
+    createMultiplayerGame = () => {
+
+        const player1BoardContainer = document.querySelector("#player1-board");
+        const player2BoardContainer = document.querySelector("#player2-board");
+
+        const player1Board = new Board(player1BoardContainer);
+        const player2Board = new Board(player2BoardContainer);
+        this.board1 = player1Board;
+        this.board2 = player2Board;
+        
+        const player1 = new Player(player1Board);
+        const player2 = new Player(player2Board);
+        
+        
+        player1.createPlayerBoard();
+        player2.createPlayerBoard();
+        
+        const arr = player2Board.arr;
+
+        for (const box of Object.keys(arr)) {
+            document.getElementById(box).innerText = "";
+        }
+        
+
+        this.makeTilesClickable(player2Board, player1);
+    }
+
+    createBotGame = () => {
+
+        const playerBoardContainer = document.querySelector("#player1-board");
+        const computerBoardContainer = document.querySelector("#player2-board");
+
+        const playerBoard = new Board(playerBoardContainer);
+        const computerBoard = new Board(computerBoardContainer);
+
+        this.board1 = playerBoard;
+        this.board2 = computerBoard;
+        
+        const player = new Player(playerBoard);
+        const computer = new Computer(computerBoard);
+        
+        
+        player.createPlayerBoard();
+        computer.createPlayerBoard();
+        
+        for (const box of Object.keys(computerBoard.arr)) {
+            document.getElementById(box).innerText = "";
+        }
+
+        return {playerBoard, computerBoard, player, computer};
+
+    }
+    startGame = async (data) => {
+
+        this.makeGamePlayable(data.computerBoard, data.playerBoard, data.computer, data.player);
+
+    }
+}
+
+class Player {
+    constructor(board) {
+        this.board = board;
+    }
+
+    createPlayerBoard = () => {
+        this.board.createBoard();
+        this.board.addCoordinates();
+        this.board.populateBoard();
+    }
+
+    attack = (board, coordinate) => {
+        const div = document.getElementById(coordinate);
+
+        if (!board.arr[coordinate][4]) {
+            if (board.arr[coordinate][2]) {
+                board.arr[coordinate][2] = false;  
+                div.style.backgroundColor = "green";
+                board.arr[coordinate][4] = true;   
+                return true;
+            } else {
+                div.style.backgroundColor = "red";
+            } 
+            
+            board.arr[coordinate][4] = true;   
+            
+        }
+
+        return false;
+
+
+    }
+}
+
+class Computer extends Player {
+    constructor(board) {
+        super(board);
+    }
+
+    attack = (board) => {
+
+        let coordinate = Math.floor(Math.random() * 10) + "," + Math.floor(Math.random() * 10) + "," + "player1-board";
+        let div = document.getElementById(coordinate);
+
+        if (!board.arr[coordinate][4]) {
+            
+            
+            if (board.arr[coordinate][2]) {
+                board.arr[coordinate][2] = false;  
+                div.style.backgroundColor = "green";
+                board.arr[coordinate][4] = true;   
+                return true;
+            } else {
+                div.style.backgroundColor = "red";
+                board.arr[coordinate][4] = true;   
+            } 
+            
+            coordinate = Math.floor(Math.random() * 10) + "," + Math.floor(Math.random() * 10) + "," + "player1-board";
+            div = document.getElementById(coordinate);
+
+
+        }
+
+        return false;
+
+
+    }
+}
+
+
+const game = new Game();
+
+const gameData = game.createBotGame();
+
+const startButton = document.getElementById("start-button");
+
+startButton.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    game.startGame(gameData);
+});

@@ -4,22 +4,34 @@
     box-sizing: border-box;
 }
 
-#drop-zone > * {
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+#container {
+    width: 100%;
+    height: 100%;
 }
 
-#drop-zone {
+#board-container {
     display: grid;
+    grid-template: 2fr / repeat(2, 1fr);
     top: 50%;
     left: 50%;
     margin: 0;
     transform: translate(-50%, -50%);
     position: absolute;
+    gap: 5rem;
+    
 }
 
-#drop-zone .row {
+#board-container> * {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+.board {
+    display: grid;
+}
+
+.board .row {
     display: flex;
     flex-direction: row;
     width: 100%;
