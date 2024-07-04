@@ -4,17 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Battleships</title>
-    <script defer src="bundle.js"></script>
 </head>
 <body>
-
+    <script defer src="bundle.js"></script>
+    
     <div id="container">
-        <button id="start-button">Start game</button>
+        <div id="game-buttons">
+            <button id="start-button">Start game</button>
+            <button id="reload-button" style="visibility: hidden;" disabled="true">Play again</button>
+        </div>
+        <div id="outcome"></div>
         <div id="board-container">
-            <div id="player1-board" class="board"></div>
-            <div id="player2-board" class="board"></div>
+            <div id="player1-container">
+                <div id="player1-board" class="board"></div>
+            </div>
+            <div id="player2-container">
+                <div id="player2-board" class="board"></div>
+            </div>
         </div>
     </div>
-
+    
 </body>
 </html>
