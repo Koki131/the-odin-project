@@ -2,6 +2,10 @@ import "./style.css";
 import '@fortawesome/fontawesome-free/js/fontawesome';
 import '@fortawesome/fontawesome-free/js/solid';
 import '@fortawesome/fontawesome-free/js/regular';
+import { getUsers, checkReferrer, onConnected, getCurrentUser } from "./multiplayer";
+
+
+let gameData = null;
 
 class Board {
     constructor(board) {
@@ -12,7 +16,52 @@ class Board {
         this.currShip = [];
     }
 
+    populateOuterFields = () => {
+
+        const currBoard = document.querySelector("#"+this.board.id);
+        const parent = currBoard.parentElement;
+        const posLetter = parent.querySelector("#position-letter");
+        const posNum = parent.querySelector("#position-num");
+        posLetter.innerText = "";
+        posNum.innerText = "";
+
+        for (let k = 65; k <= 74; k++) {
+            const div = document.createElement("div");
+            div.innerText = String.fromCharCode(k);
+            posLetter.appendChild(div);
+        }
+
+        for (let k = 1; k <= 10; k++) {
+            const div = document.createElement("div");
+            div.innerText = k;
+            posNum.appendChild(div);
+        }
+    }
+
+    createDummyBoard = () => {
+
+        for (let i = 0; i < 10; i++) {
+
+            const row = document.createElement("div");
+            row.className = "row";
+
+            for (let j = 0; j < 10; j++) {
+      
+                const div = document.createElement("div");
+                
+                div.draggable = false;
+                div.className = "box";
+                div.id = i + "," + j + "," + this.board.id;
+                row.appendChild(div);
+                
+            }
+            
+            this.board.appendChild(row);
+        }
+    }
+
     createBoard = () => {
+
 
         for (let i = 0; i < 10; i++) {
 
@@ -850,27 +899,44 @@ class PatrolBoat extends Ship {
 
 
 class Game {
-    constructor() {
+    constructor(player1, player2) {
         this.turn = 1;
         this.reloadGameButtonClicked = false;
-        this.startButton = document.getElementById("start-button");
-        this.reloadButton = document.getElementById("reload-button");
+        this.gameButtons = document.getElementById("game-buttons");
+        this.startButton = document.createElement("button");
+        this.reloadButton = document.createElement("button");
+        this.findGame = document.createElement("button");
+        this.state = document.getElementById("turn");
+        this.score = document.getElementById("outcome");
+        this.player1 = player1;
+        this.player2 = player2;
+        this.eventListenersAdded = false;
+        this.visited = [];
     }
 
     isGameOver = (playerBoard, computerBoard) => {
 
         if (this.turn === 1) {
+            
+            this.state.innerText = "Your turn";
             for (const tile of Object.values(computerBoard.arr)) {
                 if (tile[2]) return false;
             }
+            this.score.innerText = "You Win!";
+            
         } else {
-
+            
             for (const tile of Object.values(playerBoard.arr)) {
                 if (tile[2]) return false;
+                
             }
+            this.score.innerText = "Computer Wins!";
+
         }
         
-        
+        this.state.innerText = "";
+        this.reloadButton.disabled = false;
+        this.reloadButton.style.display = "";
 
 
         return true;
@@ -878,9 +944,213 @@ class Game {
 
     }
 
-    makeGamePlayable = (computerBoard, playerBoard, computer, player) => {
+    isPvPGameOver = (board) => {
 
+        for (const ship of Object.values(board)) {
+            if (ship) return false;
+        }
+
+        return true;
+
+    }
+
+    addPlayerGameButtonFunctionality = (game) => {
+        game.gameButtons.innerText = "";
+
+        game.findGame.id = "find-game";
+        game.findGame.innerText = "Find game";
+
+        game.gameButtons.append(game.findGame);
+
+        const opposingBoard = document.querySelectorAll("#player2-board .box");
+
+
+        game.findGame.addEventListener("click", async (ev) => {
+
+            for (const ship of Object.values(gameData.playerBoard.ships)) {
+                document.getElementById(ship.id).style.zIndex = -100;
+                document.getElementById(ship.id).style.border = "2px solid #352E34";
+            }
+            
+            ev.preventDefault();
+
+            const socketData = await onConnected(gameData);
+            const message = socketData.gameMessage;
+            let data = null;
+            
+            socketData.stompClient.subscribe(`/topic/game/${message.state.gameId}`, async (message) => {
+                
+                const messageData = JSON.parse(message.body);
+                data = await messageData;  
+                const target = data.target;
+                const turn = data.state.turn;
+                const user = await getCurrentUser();
+
+                if (data.gameOver) {
+                    if (turn === user.id) {
+                        this.state.innerText = "YOU WON!";
+                    }
+                    if (turn !== user.id) {
+                        this.state.innerText = "YOU LOST!";
+                    }
+
+                    return;
+                }
+                
+                if (messageData.state.player1 !== null && messageData.state.player2 !== null) {
+                    
+                    
+
+                    if (turn === user.id) {
+                        this.state.innerText = "Your Turn";
+                    } else {
+                        this.state.innerText = "Opponent's Turn";
+                    }
+
+                    let board = null;
+
+                    if (data.state.player1.id === user.id) {
+                        board = data.state.player2.board;
+                    } else {
+                        board = data.state.player1.board;
+                    }
+
+                    
+                    if (board !== null && this.isPvPGameOver(board)) {
+
+
+                        data.gameOver = true;
+                        socketData.stompClient.send(`/app/game/${data.state.gameId}`, {}, JSON.stringify(data));
+                    }
+
+                    
+                    if (target !== null && turn !== user.id && data.state.shipHit) {
+                        const div = document.getElementById(target);
+                        const i = document.createElement("i");
+                        
+                        
+                        i.className = "fa-regular fa-circle-dot";
+                        i.id = "hit-icon";
+                        
+                        div.appendChild(i);
+                        
+                    } else if (target !== null && !data.state.shipHit && turn === user.id) {
+                        const div = document.getElementById(target);
+                        const i = document.createElement("i");
+                        
+                        i.className = "fa-solid fa-x";
+                        i.id = "miss-icon";
+                        div.appendChild(i);
+                    }
+                    
+                    if (!this.eventListenersAdded) {
+                        
+                        
+                        opposingBoard.forEach(box => {
+                            box.addEventListener("click", () => {
+                                
+                                const turn = data.state.turn;
+                                
+                                console.log(data.gameOver);
+                                if (data.gameOver) return;
+
+                                if (turn === user.id) {
+                                    
+                                    if (this.visited[box.id] === undefined) {
+                                        
+                                        const target = box.id.split(",");
+                                        data.target = target[0]+","+target[1]+",player1-board";
+                                        
+                                        
+                                        const dummyTarget = target[0]+","+target[1]+",player2-board";
+                                        
+                                        const div = document.getElementById(dummyTarget);
+                                        const i = document.createElement("i");
+                                        
+                                        
+                                        let board = null;
+                                        if (data.state.player1.id === user.id) {
+                                            board = data.state.player2.board;
+                                        } else {
+                                            board = data.state.player1.board;
+                                        }
+
+                                        if (!board[data.target]) {
+                                            i.className = "fa-solid fa-x";
+                                            i.id = "miss-icon";
+                                        } else {
+                                            i.className = "fa-regular fa-circle-dot";
+                                            i.id = "hit-icon";
+                                        }
+
+                                        div.appendChild(i);
+
+                                        socketData.stompClient.send(`/app/game/${messageData.state.gameId}`, {}, JSON.stringify(data));
+                                        this.visited[box.id] = true;
+
+                                    }
+                                }
+                            });
+                        });
+    
+                        this.eventListenersAdded = true;
+                    
+                    }
+                }
+            });
+
+            socketData.stompClient.send(`/app/game/${message.state.gameId}`, {}, JSON.stringify(message));
+
+        });
+
+    }
+
+    addBotGameButtonFunctionality = (game) => {
+
+        game.gameButtons.innerText = "";
+
+        game.startButton.id = "start-button";
+        game.startButton.innerText = "Start game";
+        game.reloadButton.style.display = "";
+        game.reloadButton.disabled = false;
+
+        game.reloadButton.innerText = "Play again";
+        game.reloadButton.id = "reload-button";
+        game.reloadButton.style.display = "none";
+        game.reloadButton.disabled = true;
+
+        game.gameButtons.append(game.startButton, game.reloadButton);
+
+        game.reloadButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            game = new Game();
+            game.score.innerText = "";
+            game.state.innerText = "";
+            gameData = game.createBotGame();
+        });
+        
+        game.startButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            game.startGame(gameData);
+        });
+    }
+
+    makeGamePlayable = async (computerBoard, playerBoard, computer, player) => {
+        
+        if (this.turn === -1) {
+            this.state.innerText = "Computer's turn";
+            while (await computer.attackV2(playerBoard)) {
+                if (this.isGameOver(playerBoard, computerBoard)) {
+                    return;
+                }
+            }
+            this.turn = 1;
+            this.state.innerText = "Your turn";
+        }
+        
         const arr = computerBoard.arr;
+
+        
         
         for (const item of Object.keys(arr)) {
             
@@ -893,28 +1163,25 @@ class Game {
 
                     if (this.turn === 1 && !player.attack(computerBoard, item)) {
                         if (this.isGameOver(playerBoard, computerBoard)) {
-                            this.reloadButton.disabled = false;
-                            this.reloadButton.style.visibility = "visible";
                             return;
                         }
                         this.turn = -1
-                        while (await computer.attackV2(playerBoard)) {
-                            if (this.isGameOver(playerBoard, computerBoard)) {
-                                this.reloadButton.disabled = false;
-                                this.reloadButton.style.visibility = "visible";
-                                return;
-                            }
+                        
+                    } 
+
+                    if (this.turn === -1) {
+        
+                        this.state.innerText = "Computer's turn";
+                        while (await computer.attackV2(playerBoard)) {}
+
+                        if (this.isGameOver(playerBoard, computerBoard)) {
+                            return;
                         }
                         this.turn = 1;
                     }
                     
                 } 
-                
-                if (this.isGameOver(playerBoard, computerBoard)) {
-                    this.reloadButton.disabled = false;
-                    this.reloadButton.style.visibility = "visible";
-                }
-
+                if (this.isGameOver(playerBoard, computerBoard)) return;
 
             });
         }
@@ -923,34 +1190,25 @@ class Game {
     }
 
 
-    createMultiplayerGame = () => {
+    createMultiplayerGame = (player, playerBoard, dummyBoard) => {
 
-        const player1BoardContainer = document.querySelector("#player1-board");
-        const player2BoardContainer = document.querySelector("#player2-board");
 
-        const player1Board = new Board(player1BoardContainer);
-        const player2Board = new Board(player2BoardContainer);
-        this.board1 = player1Board;
-        this.board2 = player2Board;
-        
-        const player1 = new Player(player1Board);
-        const player2 = new Player(player2Board);
-        
-        
-        player1.createPlayerBoard();
-        player2.createPlayerBoard();
-        
-        const arr = player2Board.arr;
+        playerBoard.populateOuterFields();
+        dummyBoard.populateOuterFields();
 
-        for (const box of Object.keys(arr)) {
-            document.getElementById(box).innerText = "";
-        }
+        const dummyPlayer = new Player(dummyBoard);
+ 
+        player.createPlayerBoard();
+        dummyPlayer.createDummyPlayerBoard();
+
+        this.addPlayerGameButtonFunctionality(this);
         
 
-        this.makeTilesClickable(player2Board, player1);
+        return {playerBoard, player};
     }
 
     createBotGame = () => {
+
 
         const playerBoardContainer = document.querySelector("#player1-board");
         const computerBoardContainer = document.querySelector("#player2-board");
@@ -961,7 +1219,9 @@ class Game {
         const playerBoard = new Board(playerBoardContainer);
         const computerBoard = new Board(computerBoardContainer);
 
-        
+        playerBoard.populateOuterFields();
+        computerBoard.populateOuterFields();
+
         const player = new Player(playerBoard);
         const computer = new Computer(computerBoard);
         
@@ -969,24 +1229,36 @@ class Game {
         player.createPlayerBoard();
         computer.createPlayerBoard();
         
-        
+
         for (const ship of Object.values(computerBoard.ships)) {
             document.getElementById(ship.id).style.zIndex = -100;
         }
         for (const box of Object.keys(computerBoard.arr)) {
             document.getElementById(box).innerText = "";
         }
+        
+        this.addBotGameButtonFunctionality(this);
+
         return {playerBoard, computerBoard, player, computer};
 
     }
-    startGame = (data) => {
-        
+    startGame = async (data) => {
+
         for (const ship of Object.values(data.playerBoard.ships)) {
             document.getElementById(ship.id).style.zIndex = -100;
+            document.getElementById(ship.id).style.border = "2px solid #352E34";
+        }
+        if (Math.random() < 0.5) {
+            this.turn = 1;
+            this.state.innerText = "Your turn";
+        }  else {
+            this.turn = -1;
+            this.state.innerText = "Computer's turn";
         }
 
-        this.makeGamePlayable(data.computerBoard, data.playerBoard, data.computer, data.player);
+        await this.makeGamePlayable(data.computerBoard, data.playerBoard, data.computer, data.player);
         this.startButton.disabled = true;
+        this.startButton.style.display = "none";
     }
 
 
@@ -995,6 +1267,7 @@ class Game {
 class Player {
     constructor(board) {
         this.board = board;
+        this.connection = null;
     }
 
     createPlayerBoard = () => {
@@ -1002,6 +1275,11 @@ class Player {
         this.board.addCoordinates();
         this.board.populateBoard();
     }
+
+    createDummyPlayerBoard = () => {
+        this.board.createDummyBoard();
+    }
+
 
     sleep = (ms) => {
         return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1281,21 +1559,34 @@ class Computer extends Player {
 }
 
 
+
+
+
 let game = new Game();
 
-let gameData = game.createBotGame();
+const currMode = new URLSearchParams(window.location.search).get("mode");
 
-game.startButton.addEventListener("click", (event) => {
-    event.preventDefault();
 
-    game.startGame(gameData);
-});
 
-game.reloadButton.addEventListener("click", (event) => {
-    event.preventDefault();
-    game = new Game();
+if (currMode === "player") {
+
+    const player1BoardContainer = document.querySelector("#player1-board");
+    const player2BoardContainer = document.querySelector("#player2-board");
+    
+    player1BoardContainer.innerText = "";
+    player2BoardContainer.innerText = "";
+
+    const playerBoard = new Board(player1BoardContainer);
+    const dummyBoard = new Board(player2BoardContainer);
+    const player = new Player(playerBoard);
+
+    gameData = game.createMultiplayerGame(player, playerBoard, dummyBoard);
+
+
+} else {
+
     gameData = game.createBotGame();
-    game.reloadButton.disabled = true;
-    game.reloadButton.style.visibility = "hidden";
-    game.startButton.disabled = false;
-});
+}
+
+
+

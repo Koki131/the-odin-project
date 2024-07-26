@@ -6,19 +6,26 @@
     <title>Battleships</title>
 </head>
 <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script defer src="bundle.js"></script>
-    
+
     <div id="container">
-        <div id="game-buttons">
-            <button id="start-button">Start game</button>
-            <button id="reload-button" style="visibility: hidden;" disabled="true">Play again</button>
-        </div>
+        <div id="turn"></div>
         <div id="outcome"></div>
+        <div id="game-buttons">
+        </div>
         <div id="board-container">
             <div id="player1-container">
+                <div id="placeholder"></div>
+                <div id="position-letter"></div>
+                <div id="position-num"></div>
                 <div id="player1-board" class="board"></div>
             </div>
             <div id="player2-container">
+                <div id="placeholder"></div>
+                <div id="position-letter"></div>
+                <div id="position-num"></div>
                 <div id="player2-board" class="board"></div>
             </div>
         </div>
