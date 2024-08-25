@@ -1,9 +1,9 @@
 
-
 const connectStompClient = () => {
 
     const socket = new SockJS('http://localhost:8080/battleships-websocket');
     const stompClient = Stomp.over(socket);
+
     stompClient.debug = () => {}
 
     return new Promise((resolve, reject) => {
@@ -16,6 +16,7 @@ const connectStompClient = () => {
         });
     });
 }
+
 
 
 const getUsers = async () => {
@@ -43,18 +44,22 @@ const getCurrentUser = async () => {
 const checkReferrer = (() => {
 
     window.addEventListener("load", async () => {
-        if (document.referrer.indexOf('http://localhost:8080') === -1) {
+
+        const currMode = new URLSearchParams(window.location.search).get("mode");
+        const currId = new URLSearchParams(window.location.search).get("id");
+
+
+        if (currMode === "friend" && currId) return;
+
+        if (document.referrer.indexOf('http://localhost:8080') === -1 && !document.referrer.startsWith("http://localhost:3000/")) {
             window.location.replace("http://localhost:8080/");
         }
     });
 })();
 
 
-const onConnected = async (gameData) => {
+const joinGame = async (gameData, stompClient, user) => {
 
-    const user = await getCurrentUser();
-    const stompClient = await connectStompClient();
-    
 
     for (const data of Object.keys(gameData.playerBoard.arr)) {
         const vals = gameData.playerBoard.arr[data];
@@ -63,16 +68,17 @@ const onConnected = async (gameData) => {
     }
 
     
-    
-    return new Promise((resolve) => {
+    const promise = new Promise((resolve) => {
 
         stompClient.send('/app/queue.join', {}, JSON.stringify(user));
 
         stompClient.subscribe("/topic/join", (message) => {
             const gameMessage = JSON.parse(message.body);
-            resolve({stompClient, gameMessage});
+            resolve({stompClient, gameMessage, user});
         });
     });
+
+    return promise;
     
 }
 
@@ -81,4 +87,5 @@ const onConnected = async (gameData) => {
 
 
 
-export {getUsers, getCurrentUser, checkReferrer, onConnected};
+
+export {getUsers, getCurrentUser, checkReferrer, joinGame, connectStompClient};

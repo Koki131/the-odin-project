@@ -5964,8 +5964,6 @@ const onConnected = async (gameData) => {
         user.board[data] = vals[2]; 
     }
 
-    
-    
     return new Promise((resolve) => {
 
         stompClient.send('/app/queue.join', {}, JSON.stringify(user));
@@ -7031,7 +7029,7 @@ class Game {
         return true;
 
     }
-
+    
     addPlayerGameButtonFunctionality = (game) => {
         game.gameButtons.innerText = "";
 
@@ -7040,8 +7038,9 @@ class Game {
 
         game.gameButtons.append(game.findGame);
 
-        const opposingBoard = document.querySelectorAll("#player2-board .box");
 
+
+        const opposingBoard = document.querySelectorAll("#player2-board .box");
 
         game.findGame.addEventListener("click", async (ev) => {
 
@@ -7056,13 +7055,50 @@ class Game {
             const message = socketData.gameMessage;
             let data = null;
             
+            window.addEventListener("beforeunload", (event) => {
+
+                if (data !== null) {
+                    data.isMissingPlayer = true;
+                    socketData.stompClient.send(`/app/game/${data.state.gameId}`, {}, JSON.stringify(data));
+                }
+            });
+
             socketData.stompClient.subscribe(`/topic/game/${message.state.gameId}`, async (message) => {
                 
                 const messageData = JSON.parse(message.body);
                 data = await messageData;  
+
+                if (data !== null && data.isMissingPlayer) {
+                    if (socketData && socketData.stompClient) {
+                        socketData.stompClient.disconnect();
+                    }
+                    window.confirm = () => {};
+                    window.location.replace("http://localhost:8080");
+                }
+
+
+
                 const target = data.target;
                 const turn = data.state.turn;
                 const user = await (0,_multiplayer__WEBPACK_IMPORTED_MODULE_4__.getCurrentUser)();
+
+                // TODO:
+
+                /* 
+                REMATCH FUNCTIONALITY
+                
+                On game end, prompt both players for rematch
+                Save the gameId
+                Create new method on the backend for rematch joining
+                if yes:
+                - disable websocket connection
+                - create a new multiplayer game for each player
+                - have a ready button
+                - when ready, re-establish websocket connection, start game
+
+                if no just reload the page for both players
+                
+                */
 
                 if (data.gameOver) {
                     if (turn === user.id) {
@@ -7072,10 +7108,16 @@ class Game {
                         this.state.innerText = "YOU LOST!";
                     }
 
-                    return;
+                    const rematch = confirm("Rematch?");
+                    
+                    if (rematch) {
+                        gameData = this.createMultiplayerGame();
+                    } else {
+                        window.location.replace("http://localhost:8080");
+                    }
                 }
                 
-                if (messageData.state.player1 !== null && messageData.state.player2 !== null) {
+                if (!data.isMissingPlayer && messageData.state.player1 !== null && messageData.state.player2 !== null) {
                     
                     
 
@@ -7095,10 +7137,9 @@ class Game {
 
                     
                     if (board !== null && this.isPvPGameOver(board)) {
-
-
                         data.gameOver = true;
                         socketData.stompClient.send(`/app/game/${data.state.gameId}`, {}, JSON.stringify(data));
+                        return
                     }
 
                     
@@ -7129,7 +7170,7 @@ class Game {
                                 
                                 const turn = data.state.turn;
                                 
-                                console.log(data.gameOver);
+    
                                 if (data.gameOver) return;
 
                                 if (turn === user.id) {
@@ -7268,8 +7309,17 @@ class Game {
     }
 
 
-    createMultiplayerGame = (player, playerBoard, dummyBoard) => {
+    createMultiplayerGame = () => {
 
+        const player1BoardContainer = document.querySelector("#player1-board");
+        const player2BoardContainer = document.querySelector("#player2-board");
+        
+        player1BoardContainer.innerText = "";
+        player2BoardContainer.innerText = "";
+
+        const playerBoard = new Board(player1BoardContainer);
+        const dummyBoard = new Board(player2BoardContainer);
+        const player = new Player(playerBoard);
 
         playerBoard.populateOuterFields();
         dummyBoard.populateOuterFields();
@@ -7648,17 +7698,8 @@ const currMode = new URLSearchParams(window.location.search).get("mode");
 
 if (currMode === "player") {
 
-    const player1BoardContainer = document.querySelector("#player1-board");
-    const player2BoardContainer = document.querySelector("#player2-board");
-    
-    player1BoardContainer.innerText = "";
-    player2BoardContainer.innerText = "";
 
-    const playerBoard = new Board(player1BoardContainer);
-    const dummyBoard = new Board(player2BoardContainer);
-    const player = new Player(playerBoard);
-
-    gameData = game.createMultiplayerGame(player, playerBoard, dummyBoard);
+    gameData = game.createMultiplayerGame();
 
 
 } else {

@@ -1,0 +1,35 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Battleships</title>
+</head>
+<style>
+    form {
+        top: 50%;
+        left: 50%;
+        margin: 0;
+        transform: translate(-50%, -50%);
+        position: absolute;
+    }
+    button {
+        padding: 0.5rem;
+        background-color: rgba(0, 0, 130, 0.3);
+        border-radius: 0.5rem;
+        border-color:  rgba(0, 0, 130, 0.3);
+    }
+    button:hover {
+        transform: scale(0.98);
+        cursor: pointer;
+    }
+</style>
+<body>
+    <form action="#" th:action="@{/selectMode}" method="GET">
+        <button th:name="mode" th:value="player">vs Random</button>
+        <button th:name="mode" th:value="friend">vs Friend</button>
+        <button th:name="mode" th:value="computer">vs AI</button>
+    </form>
+</body>
+</html>

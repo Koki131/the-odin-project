@@ -2,7 +2,20 @@ import "./style.css";
 import '@fortawesome/fontawesome-free/js/fontawesome';
 import '@fortawesome/fontawesome-free/js/solid';
 import '@fortawesome/fontawesome-free/js/regular';
-import { getUsers, checkReferrer, onConnected, getCurrentUser } from "./multiplayer";
+import { getUsers, checkReferrer, joinGame, getCurrentUser, connectStompClient} from "./multiplayer";
+import showLoader from "./loader";
+import carrierH from './images/CarrierH.png';
+import carrierV from './images/CarrierV.png';
+import cruiserH from './images/CruiserH.png';
+import cruiserV from './images/CruiserV.png';
+import destroyerH from './images/DestroyerH.png';
+import destroyerV from './images/DestroyerV.png';
+import pbr from './images/PBR.png';
+
+
+window.addEventListener("load", () => {
+    showLoader();
+});
 
 
 let gameData = null;
@@ -15,6 +28,7 @@ class Board {
         this.closest = [];
         this.currShip = [];
     }
+
 
     populateOuterFields = () => {
 
@@ -94,6 +108,8 @@ class Board {
         const dropZoneRect = this.board.getBoundingClientRect();
         const relativeX = rect.top - dropZoneRect.top;
         const relativeY = rect.left - dropZoneRect.left;
+
+        console.log(rect, dropZoneRect);
 
         this.closest[0] = relativeX;
         this.closest[1] = relativeY;
@@ -214,6 +230,7 @@ class Board {
     
 
     populateBoard = () => {
+
 
         const carrier = new Carrier("carrier" + this.board.id,0,0,0,0,4,"",0,0, this.arr, this.currShip, this.ships, this.board.id);
         const cruiser1 = new Cruiser("cruiser1" + this.board.id,0,0,0,0,3,"",0,0, this.arr, this.currShip, this.ships, this.board.id);
@@ -601,6 +618,7 @@ class Carrier extends Ship {
             ship.style.left = 0;
             ship.style.top = "";
             this.orientation = "H";
+            ship.style.backgroundImage = `url(${carrierH})`;
 
         } else if (this.orientation === "H" && this.gridPositionX >= 0 && this.gridPositionX <= 240) {
 
@@ -611,6 +629,7 @@ class Carrier extends Ship {
             ship.style.left = "";
             parent.style.flexDirection = "row";
             this.orientation = "V";
+            ship.style.backgroundImage = `url(${carrierV})`;
 
         }
 
@@ -648,10 +667,13 @@ class Carrier extends Ship {
         const div = document.getElementById(this.r + "," + this.c + "," + this.boardId);
 
         const p = document.createElement("p");
+        
 
-        p.style = `border: 2px solid blue; display: flex; align-items: center;` + 
-        `justify-content: center; cursor: move; position: absolute; top: 0; left: 0; ${this.orientation === "H" ? "width: 10rem; height: 100%;" : "height: 10rem; width: 100%;"}
-        z-index: 999; background-color: rgba(255, 255, 255, 0.7)`;
+        p.style = `background: url(${this.orientation === "H" ? carrierH : carrierV}) no-repeat; background-size: cover; background-position: center; 
+        border: 2px solid blue; display: flex; align-items: center; justify-content: center; cursor: move; 
+        position: absolute; top: 0; left: 0; ${this.orientation === "H" ? "width: 10rem; height: 100%;" : "height: 10rem; width: 100%;"}
+        z-index: 999; background-color: rgba(255, 255, 255, 0.7);`;
+
 
         p.draggable = true;
         p.id = this.id;
@@ -660,6 +682,12 @@ class Carrier extends Ship {
         p.addEventListener("dragend", this.dragendHandler);
         p.addEventListener("click", this.clickHandler);
 
+    }
+
+    changeImageOrientation = (image) => {
+        const img = new Image(image);
+
+        img.se
     }
 
     checkOutOfBounds = () => {
@@ -697,6 +725,7 @@ class Cruiser extends Ship {
             ship.style.left = 0;
             ship.style.top = "";
             this.orientation = "H";
+            ship.style.backgroundImage = `url(${cruiserH})`;
 
         } else if (this.orientation === "H" && this.gridPositionX >= 0 && this.gridPositionX <= 280) {
 
@@ -705,7 +734,8 @@ class Cruiser extends Ship {
             ship.style.top = 0;
             ship.style.left = "";
             parent.style.flexDirection = "row";
-            this.orientation = "V";  
+            this.orientation = "V";
+            ship.style.backgroundImage = `url(${cruiserV})`;  
 
         }
 
@@ -738,7 +768,8 @@ class Cruiser extends Ship {
 
         const p = document.createElement("p");
 
-        p.style = `border: 2px solid blue; display: flex; align-items: center;` + 
+        p.style = `background: url(${this.orientation === "H" ? cruiserH : cruiserV}) no-repeat; background-position: center; 
+        background-size: cover; border: 2px solid blue; display: flex; align-items: center;` + 
         `justify-content: center; cursor: move; position: absolute; top: 0; left: 0; ${this.orientation === "H" ? "width: 7.5rem; height: 100%;" : "height: 7.5rem; width: 100%;"}
         z-index: 999; background-color: rgba(255, 255, 255, 0.7)`;
 
@@ -783,7 +814,8 @@ class Destroyer extends Ship {
             parent.style.flexDirection = "column";
             ship.style.left = 0;
             ship.style.top = "";
-            this.orientation = "H";    
+            this.orientation = "H";
+            ship.style.backgroundImage = `url(${destroyerH})`;    
 
         } else if (this.orientation === "H" && this.gridPositionX >= 0 && this.gridPositionX <= 320) {
 
@@ -792,7 +824,8 @@ class Destroyer extends Ship {
             ship.style.top = 0;
             ship.style.left = "";
             parent.style.flexDirection = "row";
-            this.orientation = "V";    
+            this.orientation = "V";
+            ship.style.backgroundImage = `url(${destroyerV})`;    
 
         }
 
@@ -822,7 +855,8 @@ class Destroyer extends Ship {
 
         const p = document.createElement("p");
 
-        p.style = `border: 2px solid blue; display: flex; align-items: center;` + 
+        p.style = `background: url(${this.orientation === "H" ? destroyerH : destroyerV}) no-repeat; background-position: center;
+        background-size: cover; border: 2px solid blue; display: flex; align-items: center;` + 
         `justify-content: center; cursor: move; position: absolute; top: 0; left: 0; ${this.orientation === "H" ? "width: 5rem; height: 100%;" : "height: 5rem; width: 100%;"}
         z-index: 999; background-color: rgba(255, 255, 255, 0.7)`;
 
@@ -872,9 +906,10 @@ class PatrolBoat extends Ship {
 
         const p = document.createElement("p");
 
-        p.style = `border: 2px solid blue; display: flex; align-items: center;` + 
+        p.style = `background: url(${pbr}) no-repeat; background-size: cover; background-position: center; border: 2px solid blue; display: flex; align-items: center;` + 
         `justify-content: center; cursor: move; position: absolute; top: 0; left: 0; ${this.orientation === "H" ? "width: 2.5rem; height: 100%;" : "height: 2.5rem; width: 100%;"}
-        z-index: 999; background-color: rgba(255, 255, 255, 0.7)`;
+        z-index: 999; background-color: rgba(255, 255, 255, 0.7);`;
+
 
         p.draggable = true;
         p.id = this.id;
@@ -901,7 +936,7 @@ class PatrolBoat extends Ship {
 class Game {
     constructor(player1, player2) {
         this.turn = 1;
-        this.reloadGameButtonClicked = false;
+        this.currMode = new URLSearchParams(window.location.search).get("mode");
         this.gameButtons = document.getElementById("game-buttons");
         this.startButton = document.createElement("button");
         this.reloadButton = document.createElement("button");
@@ -912,6 +947,31 @@ class Game {
         this.player2 = player2;
         this.eventListenersAdded = false;
         this.visited = [];
+        this.cameFromAccept = false;
+        this.cameFromDecline = false;
+    }
+
+
+    createFriendLink = () => {
+        const gameId = new URLSearchParams(window.location.search).get("id");
+        
+        const gameLink = `http://localhost:8080/selectMode/${this.currMode}/${gameId}`;
+
+        const div = document.createElement("div");
+        const link = document.createElement("p");
+        link.id = "friend-link";
+        link.innerText = "Click to copy game link";
+
+        div.style = "border: 0.1px solid grey; padding: 0.5rem";
+        div.appendChild(link);
+        div.id = "friend-link-container";
+
+        div.addEventListener("click", () => {
+            navigator.clipboard.writeText(gameLink);
+            link.innerText = "Link Copied!";
+        });
+
+        this.gameButtons.appendChild(div);
     }
 
     isGameOver = (playerBoard, computerBoard) => {
@@ -954,52 +1014,186 @@ class Game {
 
     }
 
-    addPlayerGameButtonFunctionality = (game) => {
-        game.gameButtons.innerText = "";
+    createRematchOptions = (user, stompClient, gameId) => {
 
+
+        const parentContainer = document.getElementById("container");
+
+        const container = document.createElement("div");
+        container.id = "rematch-container";
+        const div = document.createElement("div");
+        div.id = "rematch-options";
+        const pContainer = document.createElement("div");
+        const p = document.createElement("p");
+        pContainer.appendChild(p);
+        const buttonContainer = document.createElement("div");
+        const accept = document.createElement("button");
+        const decline = document.createElement("button");
+        buttonContainer.append(accept, decline);
+        p.textContent = "Rematch?";
+        accept.textContent = "Accept";
+        decline.textContent = "Decline";
+        accept.id = "accept-button";
+        decline.id = "decline-button";
+
+        div.append(pContainer, buttonContainer);
+        container.appendChild(div);
+        parentContainer.appendChild(container);
+
+
+        accept.addEventListener("click", async (ev) => {
+            ev.preventDefault();
+            container.remove();
+            user.gameId = gameId;
+            user.rematch = true;
+            await fetch("http://localhost:8080/updateCurrentUser", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify(user)
+            });
+            gameData = this.createMultiplayerGame();    
+            await stompClient.disconnect();
+            this.cameFromAccept = true;
+            location.reload();
+        });
+
+        decline.addEventListener("click", async (ev) => {
+            ev.preventDefault();
+            user.gameId = gameId;
+            user.rematch = false;
+            await fetch("http://localhost:8080/updateCurrentUser", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify(user)
+            });
+            this.cameFromDecline = true;
+
+            this.currMode === "friend" ? window.location.replace("http://localhost:8080") : location.reload();  
+        });
+
+    }
+    
+    addPlayerGameButtonFunctionality = async (game) => {
+        
+        game.gameButtons.innerText = "";
+        if (this.currMode === "friend") {
+            this.createFriendLink();
+        }
+        
+        const randomizeLink = document.getElementById("randomize");
+        const friendLinkContainer = document.getElementById("friend-link-container");
+        
         game.findGame.id = "find-game";
-        game.findGame.innerText = "Find game";
+        game.findGame.innerText = "Join game";
 
         game.gameButtons.append(game.findGame);
 
+        const stompClient = await connectStompClient();
+        let user = await getCurrentUser();
+        
+
+        if (this.currMode === "friend") {
+
+            stompClient.subscribe(`/topic/game/private/${user.gameId}`, async (message) => {
+                window.location.replace("http://localhost:8080"); 
+                await stompClient.disconnect();
+
+            });
+        }
+
+        window.addEventListener("beforeunload", async (ev) => {
+
+            if (user.gameId !== null && !this.cameFromAccept) {
+                user.rematch = false;
+                
+                const state = {gameId: user.gameId, player1: null, player2: null, turn: "", shipHit: false, privateGameFull: false};
+                if (this.currMode === "friend") {
+                    stompClient.send(`/app/game/private/${user.gameId}`, {}, JSON.stringify({state: state, target: "", gameOver: true, isMissingPlayer: true}));
+                    return;
+                }
+                stompClient.send(`/app/game/${user.gameId}`, {}, JSON.stringify({state, target: "", gameOver: true, isMissingPlayer: true}));
+                
+
+                await stompClient.disconnect();
+                await fetch("http://localhost:8080/updateCurrentUser", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    body: JSON.stringify(user)
+                });
+            }
+        });
+        
         const opposingBoard = document.querySelectorAll("#player2-board .box");
-
-
+        
         game.findGame.addEventListener("click", async (ev) => {
+            
+            this.state.innerText = "Waiting for Opponent";
+            game.findGame.style.display = "none";
+            randomizeLink.style.display = "none";
+            if (this.currMode === "friend") friendLinkContainer.style.display = "none";
 
             for (const ship of Object.values(gameData.playerBoard.ships)) {
                 document.getElementById(ship.id).style.zIndex = -100;
-                document.getElementById(ship.id).style.border = "2px solid #352E34";
+                document.getElementById(ship.id).style.border = "0px";
             }
             
             ev.preventDefault();
-
-            const socketData = await onConnected(gameData);
-            const message = socketData.gameMessage;
-            let data = null;
             
+            
+            let data = null;
+            let gameEnded = false;
+            user = await getCurrentUser();
+            const socketData = await joinGame(gameData, stompClient, user);
+            const message = socketData.gameMessage;
+            user.gameId = message.state.gameId;
+            socketData.stompClient.send(`/app/game/${message.state.gameId}`, {}, JSON.stringify(message));
+            
+
+
             socketData.stompClient.subscribe(`/topic/game/${message.state.gameId}`, async (message) => {
-                
+
                 const messageData = JSON.parse(message.body);
+                
                 data = await messageData;  
+
+                if (data !== null && data.isMissingPlayer) {
+                    this.currMode === "friend" ? window.location.replace("http://localhost:8080") : location.reload();  
+                    return;
+                }
+
                 const target = data.target;
                 const turn = data.state.turn;
-                const user = await getCurrentUser();
 
-                if (data.gameOver) {
+
+
+
+                if (data.gameOver && !gameEnded) {
+                    gameEnded = true;
                     if (turn === user.id) {
                         this.state.innerText = "YOU WON!";
                     }
                     if (turn !== user.id) {
                         this.state.innerText = "YOU LOST!";
                     }
-
-                    return;
+                    
+                    this.createRematchOptions(user, socketData.stompClient, data.state.gameId);
                 }
                 
-                if (messageData.state.player1 !== null && messageData.state.player2 !== null) {
-                    
-                    
+                if (!data.gameOver && !data.isMissingPlayer && data.state.player1 !== null && data.state.player2 !== null) {
+
+                    // data.gameOver = true;
+                    // socketData.stompClient.send(`/app/game/${data.state.gameId}`, {}, JSON.stringify(data));
+                    // return; 
+                    // // game over end
 
                     if (turn === user.id) {
                         this.state.innerText = "Your Turn";
@@ -1017,10 +1211,9 @@ class Game {
 
                     
                     if (board !== null && this.isPvPGameOver(board)) {
-
-
                         data.gameOver = true;
                         socketData.stompClient.send(`/app/game/${data.state.gameId}`, {}, JSON.stringify(data));
+                        return;
                     }
 
                     
@@ -1051,7 +1244,7 @@ class Game {
                                 
                                 const turn = data.state.turn;
                                 
-                                console.log(data.gameOver);
+    
                                 if (data.gameOver) return;
 
                                 if (turn === user.id) {
@@ -1085,7 +1278,7 @@ class Game {
 
                                         div.appendChild(i);
 
-                                        socketData.stompClient.send(`/app/game/${messageData.state.gameId}`, {}, JSON.stringify(data));
+                                        socketData.stompClient.send(`/app/game/${data.state.gameId}`, {}, JSON.stringify(data));
                                         this.visited[box.id] = true;
 
                                     }
@@ -1099,7 +1292,7 @@ class Game {
                 }
             });
 
-            socketData.stompClient.send(`/app/game/${message.state.gameId}`, {}, JSON.stringify(message));
+
 
         });
 
@@ -1107,6 +1300,7 @@ class Game {
 
     addBotGameButtonFunctionality = (game) => {
 
+        const randomizeLink = document.getElementById("randomize");
         game.gameButtons.innerText = "";
 
         game.startButton.id = "start-button";
@@ -1127,10 +1321,12 @@ class Game {
             game.score.innerText = "";
             game.state.innerText = "";
             gameData = game.createBotGame();
+            randomizeLink.style.display = "";
         });
         
         game.startButton.addEventListener("click", (event) => {
             event.preventDefault();
+            randomizeLink.style.display = "none";
             game.startGame(gameData);
         });
     }
@@ -1190,8 +1386,17 @@ class Game {
     }
 
 
-    createMultiplayerGame = (player, playerBoard, dummyBoard) => {
+    createMultiplayerGame = () => {
 
+        const player1BoardContainer = document.querySelector("#player1-board");
+        const player2BoardContainer = document.querySelector("#player2-board");
+        
+        player1BoardContainer.innerText = "";
+        player2BoardContainer.innerText = "";
+
+        const playerBoard = new Board(player1BoardContainer);
+        const dummyBoard = new Board(player2BoardContainer);
+        const player = new Player(playerBoard);
 
         playerBoard.populateOuterFields();
         dummyBoard.populateOuterFields();
@@ -1200,6 +1405,7 @@ class Game {
  
         player.createPlayerBoard();
         dummyPlayer.createDummyPlayerBoard();
+        player.addRandomize();
 
         this.addPlayerGameButtonFunctionality(this);
         
@@ -1228,7 +1434,7 @@ class Game {
         
         player.createPlayerBoard();
         computer.createPlayerBoard();
-        
+        player.addRandomize();
 
         for (const ship of Object.values(computerBoard.ships)) {
             document.getElementById(ship.id).style.zIndex = -100;
@@ -1246,7 +1452,7 @@ class Game {
 
         for (const ship of Object.values(data.playerBoard.ships)) {
             document.getElementById(ship.id).style.zIndex = -100;
-            document.getElementById(ship.id).style.border = "2px solid #352E34";
+            document.getElementById(ship.id).style.border = "0px";
         }
         if (Math.random() < 0.5) {
             this.turn = 1;
@@ -1267,7 +1473,23 @@ class Game {
 class Player {
     constructor(board) {
         this.board = board;
-        this.connection = null;
+    }
+
+    addRandomize = () => {
+        const randomizeLink = document.getElementById("randomize");
+
+        const player1BoardContainer = document.querySelector("#player1-board");
+        randomizeLink.addEventListener("click", (ev) => {
+            ev.preventDefault();
+            this.board.arr = [];
+            this.board.ships = [];
+            this.board.closest = [];
+            this.board.currShip = [];
+            player1BoardContainer.innerHTML = "";
+
+            this.createPlayerBoard();
+
+        });
     }
 
     createPlayerBoard = () => {
@@ -1564,23 +1786,13 @@ class Computer extends Player {
 
 let game = new Game();
 
-const currMode = new URLSearchParams(window.location.search).get("mode");
+const currMode = game.currMode;
 
 
+if (currMode === "player" || currMode === "friend") {
 
-if (currMode === "player") {
 
-    const player1BoardContainer = document.querySelector("#player1-board");
-    const player2BoardContainer = document.querySelector("#player2-board");
-    
-    player1BoardContainer.innerText = "";
-    player2BoardContainer.innerText = "";
-
-    const playerBoard = new Board(player1BoardContainer);
-    const dummyBoard = new Board(player2BoardContainer);
-    const player = new Player(playerBoard);
-
-    gameData = game.createMultiplayerGame(player, playerBoard, dummyBoard);
+    gameData = game.createMultiplayerGame();
 
 
 } else {
