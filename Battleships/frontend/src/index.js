@@ -670,7 +670,7 @@ class Carrier extends Ship {
         
 
         p.style = `background: url(${this.orientation === "H" ? carrierH : carrierV}) no-repeat; background-size: cover; background-position: center; 
-        border: 2px solid blue; display: flex; align-items: center; justify-content: center; cursor: move; 
+        border: 2px solid #4d4d53; display: flex; align-items: center; justify-content: center; cursor: move; 
         position: absolute; top: 0; left: 0; ${this.orientation === "H" ? "width: 10rem; height: 100%;" : "height: 10rem; width: 100%;"}
         z-index: 999; background-color: rgba(255, 255, 255, 0.7);`;
 
@@ -769,7 +769,7 @@ class Cruiser extends Ship {
         const p = document.createElement("p");
 
         p.style = `background: url(${this.orientation === "H" ? cruiserH : cruiserV}) no-repeat; background-position: center; 
-        background-size: cover; border: 2px solid blue; display: flex; align-items: center;` + 
+        background-size: cover; border: 2px solid #4d4d53; display: flex; align-items: center;` + 
         `justify-content: center; cursor: move; position: absolute; top: 0; left: 0; ${this.orientation === "H" ? "width: 7.5rem; height: 100%;" : "height: 7.5rem; width: 100%;"}
         z-index: 999; background-color: rgba(255, 255, 255, 0.7)`;
 
@@ -856,7 +856,7 @@ class Destroyer extends Ship {
         const p = document.createElement("p");
 
         p.style = `background: url(${this.orientation === "H" ? destroyerH : destroyerV}) no-repeat; background-position: center;
-        background-size: cover; border: 2px solid blue; display: flex; align-items: center;` + 
+        background-size: cover; border: 2px solid #4d4d53; display: flex; align-items: center;` + 
         `justify-content: center; cursor: move; position: absolute; top: 0; left: 0; ${this.orientation === "H" ? "width: 5rem; height: 100%;" : "height: 5rem; width: 100%;"}
         z-index: 999; background-color: rgba(255, 255, 255, 0.7)`;
 
@@ -906,7 +906,7 @@ class PatrolBoat extends Ship {
 
         const p = document.createElement("p");
 
-        p.style = `background: url(${pbr}) no-repeat; background-size: cover; background-position: center; border: 2px solid blue; display: flex; align-items: center;` + 
+        p.style = `background: url(${pbr}) no-repeat; background-size: cover; background-position: center; border: 2px solid #4d4d53; display: flex; align-items: center;` + 
         `justify-content: center; cursor: move; position: absolute; top: 0; left: 0; ${this.orientation === "H" ? "width: 2.5rem; height: 100%;" : "height: 2.5rem; width: 100%;"}
         z-index: 999; background-color: rgba(255, 255, 255, 0.7);`;
 
@@ -943,6 +943,8 @@ class Game {
         this.findGame = document.createElement("button");
         this.state = document.getElementById("turn");
         this.score = document.getElementById("outcome");
+        this.parentContainer = document.getElementById("container");
+        this.chatElements = null;
         this.player1 = player1;
         this.player2 = player2;
         this.eventListenersAdded = false;
@@ -1016,9 +1018,6 @@ class Game {
 
     createRematchOptions = (user, stompClient, gameId) => {
 
-
-        const parentContainer = document.getElementById("container");
-
         const container = document.createElement("div");
         container.id = "rematch-container";
         const div = document.createElement("div");
@@ -1038,7 +1037,7 @@ class Game {
 
         div.append(pContainer, buttonContainer);
         container.appendChild(div);
-        parentContainer.appendChild(container);
+        this.parentContainer.appendChild(container);
 
 
         accept.addEventListener("click", async (ev) => {
@@ -1081,7 +1080,9 @@ class Game {
     
     addPlayerGameButtonFunctionality = async (game) => {
         
+
         game.gameButtons.innerText = "";
+
         if (this.currMode === "friend") {
             this.createFriendLink();
         }
@@ -1136,7 +1137,7 @@ class Game {
         
         game.findGame.addEventListener("click", async (ev) => {
             
-            this.state.innerText = "Waiting for Opponent";
+            this.state.innerText = "Waiting for Opponent...";
             game.findGame.style.display = "none";
             randomizeLink.style.display = "none";
             if (this.currMode === "friend") friendLinkContainer.style.display = "none";
@@ -1157,6 +1158,36 @@ class Game {
             user.gameId = message.state.gameId;
             socketData.stompClient.send(`/app/game/${message.state.gameId}`, {}, JSON.stringify(message));
             
+            // chat subscribe
+            socketData.stompClient.subscribe(`/topic/chat/${message.state.gameId}`, (message) => {
+                const messageData = JSON.parse(message.body);
+
+                const p = document.createElement("p");
+                const nameContainer = document.createElement("span");
+                nameContainer.id = "name-container";
+                const textContainer = document.createElement("span");
+                textContainer.id = "text-container";
+                textContainer.innerText = messageData.message;
+                
+                p.style = "display: flex; flex-direction: row; margin: 0.3rem";
+                
+                if (user.id === messageData.sender.id) {
+                    nameContainer.innerText = "You ";
+                    p.style.alignItems = "center";
+                    p.style.justifyContent = "end";
+                    nameContainer.style.color = "blue";
+                    p.prepend(textContainer, nameContainer);
+                } else {
+                    nameContainer.innerText = "Opponent";
+                    p.style.alignItems = "center";
+                    p.style.justifyContent = "start";
+                    nameContainer.style.color = "red";
+                    p.prepend(nameContainer, textContainer);
+                }
+                
+                this.chatElements.conversationBox.appendChild(p);
+                
+            });
 
 
             socketData.stompClient.subscribe(`/topic/game/${message.state.gameId}`, async (message) => {
@@ -1190,10 +1221,11 @@ class Game {
                 
                 if (!data.gameOver && !data.isMissingPlayer && data.state.player1 !== null && data.state.player2 !== null) {
 
-                    // data.gameOver = true;
-                    // socketData.stompClient.send(`/app/game/${data.state.gameId}`, {}, JSON.stringify(data));
-                    // return; 
+                    data.gameOver = true;
+                    socketData.stompClient.send(`/app/game/${data.state.gameId}`, {}, JSON.stringify(data));
+                    return; 
                     // // game over end
+
 
                     if (turn === user.id) {
                         this.state.innerText = "Your Turn";
@@ -1237,7 +1269,10 @@ class Game {
                     }
                     
                     if (!this.eventListenersAdded) {
-                        
+
+                        // add chat
+                        this.chatElements = this.createChat(user, data.state.gameId, socketData.stompClient);
+
                         
                         opposingBoard.forEach(box => {
                             box.addEventListener("click", () => {
@@ -1296,6 +1331,58 @@ class Game {
 
         });
 
+    }
+
+    createChat = (user, gameId, stompClient) => {
+
+        const chatContainer = document.createElement("div");
+        const chatBox = document.createElement("div");
+        const conversationBoxWrapper = document.createElement("div");
+        const conversationBox = document.createElement("div");
+        const sendMessageBox = document.createElement("div");
+
+        const form = document.createElement("form");
+        const chatWindowInput = document.createElement("input");
+        const chatWindowButton = document.createElement("button");
+
+        chatContainer.id = "chat-container";
+        chatBox.id = "chat";
+        conversationBoxWrapper.id = "conversation-box-wrapper";
+        conversationBox.id = "conversation-box";
+        sendMessageBox.id = "send-message-box";
+        form.id = "chat-form";
+        form.action = "#";
+        chatWindowInput.id = "chat-input";
+        chatWindowButton.id = "send-button";
+        chatWindowButton.type = "submit";
+        chatWindowButton.textContent = "Send";
+        chatWindowInput.placeholder = "Flame your opponent...";
+    
+        form.append(chatWindowInput, chatWindowButton);
+        sendMessageBox.appendChild(form);
+        conversationBoxWrapper.appendChild(conversationBox);
+        chatBox.append(conversationBoxWrapper, sendMessageBox);
+        chatContainer.appendChild(chatBox);
+        this.parentContainer.appendChild(chatContainer);
+        
+        chatWindowButton.addEventListener("click", (ev) => {
+            ev.preventDefault();
+
+            const textToSend = chatWindowInput.value;
+            
+            if (textToSend.trim() !== "") {
+                
+                const message = {sender: user, message: textToSend};
+
+                stompClient.send(`/app/chat/${gameId}`, {}, JSON.stringify(message));
+
+                
+            }
+            chatWindowInput.value = "";
+        });
+
+        
+        return { chatContainer, chatBox, conversationBox, sendMessageBox };
     }
 
     addBotGameButtonFunctionality = (game) => {

@@ -7,29 +7,62 @@
     <title>Battleships</title>
 </head>
 <style>
-    form {
-        top: 50%;
-        left: 50%;
+    @import url('https://fonts.cdnfonts.com/css/unispace');
+
+    * {
+        font-family: 'Unispace', sans-serif;
         margin: 0;
-        transform: translate(-50%, -50%);
-        position: absolute;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    #container {
+        display: flex;
+        flex-direction: column;
+    }
+    #background-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30rem;
+    }
+
+    #form-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
     }
     button {
-        padding: 0.5rem;
-        background-color: rgba(0, 0, 130, 0.3);
-        border-radius: 0.5rem;
-        border-color:  rgba(0, 0, 130, 0.3);
+        background: none;
+        color: #4d4d53;
+        border: none;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+        outline: inherit;
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 2rem;
     }
     button:hover {
         transform: scale(0.98);
         cursor: pointer;
+        color: rgba(255, 0, 0, 0.6);
     }
+
 </style>
 <body>
-    <form action="#" th:action="@{/selectMode}" method="GET">
-        <button th:name="mode" th:value="player">vs Random</button>
-        <button th:name="mode" th:value="friend">vs Friend</button>
-        <button th:name="mode" th:value="computer">vs AI</button>
-    </form>
+    <div id="container">
+        <div id="background-container">
+            <div><img th:src="@{./Background.png}"></div>
+        </div>
+        <div id="form-container">
+            <form action="#" th:action="@{/selectMode}" method="GET">
+                <button th:name="mode" th:value="player">vs Random</button>
+                <button th:name="mode" th:value="friend">vs Friend</button>
+                <button th:name="mode" th:value="computer">vs AI</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

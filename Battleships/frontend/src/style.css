@@ -1,5 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
+/* scrollbar */
+
+/* width */
+::-webkit-scrollbar {
+    width: 0.1rem;
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+    background: #ffffff; 
+}
+   
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #b9b9b9; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -9,11 +31,15 @@
 
 
 
+#game-container {
+    /* background: url('./images/background.png') center / cover no-repeat; */
+}
+
 #container {
     width: 100vw;
     height: 100vh;
     display: grid;
-    grid-template: 1fr 1fr 1fr 10fr / 1fr;
+    grid-template: 0.8fr 0.8fr 0.8fr 9fr 5fr / 1fr;
 }
 
 #rematch-container {
@@ -56,11 +82,10 @@
     margin: 0.5rem;
 }
 
-
 #board-container {
     display: grid;
     grid-template: 2fr / repeat(2, 1fr);
-    align-items: start; /* Align children to the top */
+    align-items: start;
     gap: 5rem;
     
 }
@@ -96,23 +121,39 @@
 
 a {
     text-decoration: none;
-    color: rgb(18, 18, 221);
-    margin-top: 0.5rem;
+    background: none;
+    color: #4d4d53;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 1rem;
 }
 a:hover {
-    transform: scale(1.03);
+    transform: scale(0.98);
+    cursor: pointer;
     color: rgba(255, 0, 0, 0.6);
 }
 
 button {
-    padding: 0.5rem;
-    background-color: rgba(0, 0, 130, 0.3);
-    border-radius: 0.5rem;
-    border-color:  rgba(0, 0, 130, 0.3);
+    background: none;
+    color: #4d4d53;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 2rem;
 }
 button:hover {
     transform: scale(0.98);
     cursor: pointer;
+    color: rgba(255, 0, 0, 0.6);
 }
 #randomize-ships {
     grid-area: randomize-ships;
@@ -174,6 +215,106 @@ button:hover {
     position: relative;
 }
 
+#chat-container {
+    width: 100%;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+#chat {
+    display: grid;
+    grid-template: 10fr 2fr / 1fr;
+    height: 100%;
+    width: 40%;
+    align-items: end;
+}
+
+
+span {
+    margin: 0.3rem;
+    max-width: 200px;
+    word-wrap: break-word;
+}
+#text-container {
+    font-size: 14px;
+}
+#name-container {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+#chat-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+}
+#chat-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding: 0.5rem;
+}
+
+/*  I HAVE NO IDEA HOW THIS WORKS, BUT IT'S FINE */
+
+#conversation-box-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-y: hidden;
+    height: 5rem;
+    transition: 0.2s ease;
+    border: 1px solid white;
+}
+#conversation-box {
+    display: flex;
+    flex-direction: column;
+}
+
+/* END OF CONFUSION */
+
+#send-message-box {
+    display: grid;
+    grid-template: 1fr / 10fr;
+    height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+#chat:focus-within #conversation-box-wrapper {
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    overflow: auto;
+    height: 10rem;
+}
+
+#chat-input:focus {
+    outline: none;
+}
+
+#send-button {
+    background: none;
+    color: #4d4d53;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin: 0.5rem;
+    width: 10%;
+    height: 100%;
+}
+#send-button:hover {
+    transform: scale(0.98);
+    cursor: pointer;
+    color: rgba(255, 0, 0, 0.6);
+}
 svg {
     position: absolute;
     margin: 0;
@@ -189,23 +330,11 @@ svg path {
     animation: draw 1s forwards;
 }
 
-svg g {
-    fill: black;
-    fill-opacity: 0;
-    animation: fill-in 1s 1s forwards;
-}
 
 @keyframes draw {
     
     to {
         stroke-dashoffset: 0;
-    }
-    
-}
-@keyframes fill-in {
-    
-    to {
-        fill-opacity: 1;
     }
     
 }

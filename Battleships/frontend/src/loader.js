@@ -3,7 +3,7 @@ const container = document.getElementById("game-container");
 const randomizeLink = document.getElementById("randomize-ships");
 
 const showLoader = () => {
-    setTimeout(showPage, 2000);
+    setTimeout(showPage, 1000);
 }
 
 const showPage = () => {

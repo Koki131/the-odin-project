@@ -1,10 +1,7 @@
 package com.battleships.controller;
 
 
-import com.battleships.pojo.Game;
-import com.battleships.pojo.GameMessage;
-import com.battleships.pojo.GameState;
-import com.battleships.pojo.User;
+import com.battleships.pojo.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -201,6 +198,13 @@ public class BattleshipsController {
     public GameMessage privateGameDisconnect(GameMessage message) {
 
         Game.boardStates.remove(message.getState().getGameId());
+
+        return message;
+    }
+
+    @MessageMapping("/chat/{gameId}")
+    @SendTo("/topic/chat/{gameId}")
+    public ChatMessage sendMessage(ChatMessage message) {
 
         return message;
     }
