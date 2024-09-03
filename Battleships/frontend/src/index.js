@@ -27,6 +27,8 @@ class Board {
         this.ships = [];
         this.closest = [];
         this.currShip = [];
+        this.prevCoordinates = [];
+
     }
 
 
@@ -99,20 +101,65 @@ class Board {
         }
     }
 
+    updateBorders = (ev) => {
+        
+        const containerCoord = ev.target.id.split(",");
+
+        if (containerCoord[2] !== "player1-board") return;
+
+        this.updateClosest(containerCoord);
+        let placement = this.getPlacement();
+        let container = document.getElementById(placement);
+            
+        const coordinates = placement.split(",");
+        if (this.prevCoordinates.length > 0) {
+            for (const c of this.prevCoordinates) {
+                c.style.backgroundColor = "";
+            }
+        }
+            
+        if (this.currShip[0].canPlace()) {
+            
+            this.prevCoordinates = [];
+
+            if (this.currShip[0].orientation === "H") {       
+
+                for (let i = 0; i < this.currShip[0].noOfTiles; i++) {
+                    container.style.backgroundColor = "rgba(0, 255, 0, 0.8)";
+                    this.prevCoordinates[i] = container;
+                    coordinates[1] = Number.parseInt(coordinates[1]) + 1;
+                    container = document.getElementById(coordinates[0] + "," + coordinates[1] + "," + coordinates[2]); 
+                }
+                
+            } else {
+
+                for (let i = 0; i < this.currShip[0].noOfTiles; i++) {
+                    container.style.backgroundColor = "rgba(0, 255, 0, 0.8)";
+                    this.prevCoordinates[i] = container;
+                    coordinates[0] = Number.parseInt(coordinates[0]) + 1;
+                    container = document.getElementById(coordinates[0] + "," + coordinates[1] + "," + coordinates[2]); 
+                }
+                
+            }
+
+        } 
+    }
+
         
     dragoverHandler = (ev) => {
 
         ev.preventDefault();
-
+        
         const rect = ev.target.getBoundingClientRect();
         const dropZoneRect = this.board.getBoundingClientRect();
         const relativeX = rect.top - dropZoneRect.top;
         const relativeY = rect.left - dropZoneRect.left;
-
-        console.log(rect, dropZoneRect);
-
+        
         this.closest[0] = relativeX;
         this.closest[1] = relativeY;
+
+        this.updateBorders(ev);
+
 
     }
 
@@ -120,9 +167,13 @@ class Board {
         
         ev.preventDefault();
   
-
         if (this.currShip[0] !== undefined) {
-
+            this.currShip[0].enteredDropHandler = true;
+            if (this.prevCoordinates.length > 0) {
+                for (const c of this.prevCoordinates) {
+                    c.style.backgroundColor = "";
+                }
+            }
             const p = document.getElementById(this.currShip[0].id);
 
             p.style.zIndex = 1;
@@ -134,15 +185,15 @@ class Board {
     
             const element = document.querySelector("#" + data);
     
-            const containerCoord = ev.target.id.split(",");
+            
+            // const row = this.currShip[0].r;
+            // const col = this.currShip[0].c;
+            // const gridPositionX = this.currShip[0].gridPositionX;
+            // const gridPositionY = this.currShip[0].gridPositionY;
+            
+            // const containerCoord = ev.target.id.split(",");
 
-            const row = this.currShip[0].r;
-            const col = this.currShip[0].c;
-            const gridPositionX = this.currShip[0].gridPositionX;
-            const gridPositionY = this.currShip[0].gridPositionY;
-    
-
-            this.updateClosest(containerCoord);
+            // this.updateClosest(containerCoord);
      
             const container = document.getElementById(this.getPlacement());
 
@@ -152,10 +203,10 @@ class Board {
             
             if (!this.currShip[0].canPlace()) {
 
-                this.currShip[0].r = row;
-                this.currShip[0].c = col;
-                this.currShip[0].gridPositionX = gridPositionX;
-                this.currShip[0].gridPositionY = gridPositionY;
+                this.currShip[0].r = this.currShip[0].oldCoords[0];
+                this.currShip[0].c = this.currShip[0].oldCoords[1];
+                this.currShip[0].gridPositionX = this.currShip[0].oldCoords[2];
+                this.currShip[0].gridPositionY = this.currShip[0].oldCoords[3];
 
                 this.currShip[0].occupyHelper();
                 return;
@@ -306,6 +357,8 @@ class Ship {
         this.currShip = currShip;
         this.ships = ships;
         this.boardId = boardId;
+        this.oldCoords = [];
+        this.enteredDropHandler = false;
     }
 
     sleep = (ms) => {
@@ -319,12 +372,18 @@ class Ship {
     dragstartHandler = async (ev) => {
 
         if (ev.target.id === this.id) {
+            this.enteredDropHandler = false;
             this.unoccupyTotal();
+            this.unoccupyShipTiles();
             const rect = ev.target.getBoundingClientRect();
             this.currPositionX = Math.abs(rect.x - ev.clientX);
             this.currPositionY = Math.abs(rect.y - ev.clientY);
             ev.dataTransfer.setData("text/plain", ev.target.id);
             this.currShip[0] = this;
+            this.oldCoords[0] = this.r;
+            this.oldCoords[1] = this.c;
+            this.oldCoords[2] = this.gridPositionX;
+            this.oldCoords[3] = this.gridPositionY;
             await this.sleep(0);
             ev.target.style.zIndex = -1;
             ev.target.style.visibility = "hidden";
@@ -332,14 +391,73 @@ class Ship {
     }
 
     dragendHandler = (ev) => {
-
+        for (const tile of Object.keys(this.arr)) {
+            document.getElementById(tile).style.backgroundColor = "";
+        }
         if (ev.target.id === this.id) {
+            if (!this.enteredDropHandler) {
+                this.r = this.currShip[0].oldCoords[0];
+                this.c = this.currShip[0].oldCoords[1];
+                this.gridPositionX = this.currShip[0].oldCoords[2];
+                this.gridPositionY = this.currShip[0].oldCoords[3];
+                this.occupyHelper();
+            }
             ev.target.style.zIndex = 1;
             ev.target.style.visibility = "visible";
         }
     
     }
 
+    
+    occupyTotalBoard = () => {
+        
+        
+        for (let occupied of this.occupiesTotal) {
+            this.arr[occupied][3] = true;
+        }
+        
+    }
+
+    unoccupyTotalBoard = () => {
+        
+        for (let occupied of this.occupiesTotal) {
+            this.arr[occupied][3] = false;
+        }
+        
+    }
+    
+    occupyShip = () => {
+        
+        this.unoccupyShipTiles();
+        
+        
+        const r = Number.parseInt(this.r);
+        const c = Number.parseInt(this.c);
+        
+        if (this.orientation === "H") {
+            
+            
+            for (let i = c; i < c + this.noOfTiles; i++) {
+                
+                this.shipOccupies.push(r + "," + i + "," + this.boardId);
+                this.arr[r + "," + i + "," + this.boardId][2] = true;
+                
+            }
+            
+        } else {
+            
+            
+            for (let i = r; i < r + this.noOfTiles; i++) {
+                
+                this.shipOccupies.push(i + "," + c + "," + this.boardId);
+                this.arr[i + "," + c + "," + this.boardId][2] = true;
+                
+            }
+            
+        }
+        
+    }
+    
     unoccupyShipTiles = () => {
 
 
@@ -350,60 +468,11 @@ class Ship {
 
     }
 
-
-    occupyShip = () => {
-
-        this.unoccupyShipTiles();
-
-
-        const r = Number.parseInt(this.r);
-        const c = Number.parseInt(this.c);
-
-        if (this.orientation === "H") {
-            
-            
-            for (let i = c; i < c + this.noOfTiles; i++) {
-
-                this.shipOccupies.push(r + "," + i + "," + this.boardId);
-                this.arr[r + "," + i + "," + this.boardId][2] = true;
-
-            }
-
-        } else {
-
-
-            for (let i = r; i < r + this.noOfTiles; i++) {
-
-                this.shipOccupies.push(i + "," + c + "," + this.boardId);
-                this.arr[i + "," + c + "," + this.boardId][2] = true;
-
-            }
-
-        }
-
-    }
-
-    occupyTotalBoard = () => {
-
-
-        for (let occupied of this.occupiesTotal) {
-            this.arr[occupied][3] = true;
-        }
-
-    }
     unoccupyShipTilesBoard = () => {
 
         for (let tile of this.shipOccupies) {
             this.arr[tile][2] = false;
         }
-    }
-
-    unoccupyTotalBoard = () => {
-        
-        for (let occupied of this.occupiesTotal) {
-            this.arr[occupied][3] = false;
-        }
-        
     }
 
     unoccupyTotal = () => {
@@ -414,6 +483,62 @@ class Ship {
 
         this.occupiesTotal = [];
 
+    }
+
+    occupyTotal = () => {
+        
+        
+        this.unoccupyTotal();
+        
+
+        const r = Number.parseInt(this.r);
+        const c = Number.parseInt(this.c);
+
+        
+        if (this.orientation === "H") {
+
+            if (c - 1 >= 0) this.occupiesTotal.push(r + "," + (c - 1) + "," + this.boardId);
+            if (c + this.noOfTiles < 10) this.occupiesTotal.push(r + "," + (c + this.noOfTiles) + "," + this.boardId);
+
+            for (let i = c - 1; i < c + this.noOfTiles + 1; i++) {
+
+                if (i < 0 || i >= 10) continue;
+
+                if (r - 1 >= 0) this.occupiesTotal.push((r - 1) + "," + i + "," + this.boardId);
+                if (r + 1 < 10) this.occupiesTotal.push((r + 1) + "," + i + "," + this.boardId);
+
+                this.occupiesTotal.push(r + "," + i + "," + this.boardId);
+
+            }
+
+            
+
+        } else {
+
+            if (r - 1 >= 0) this.occupiesTotal.push((r - 1) + "," + c + "," + this.boardId);
+            if (r + this.noOfTiles < 10) this.occupiesTotal.push((r + this.noOfTiles) + "," + c + "," + this.boardId);
+
+            for (let i = r - 1; i < r + this.noOfTiles + 1; i++) {
+
+                if (i < 0 || i >= 10) continue;
+                
+                if (c - 1 >= 0) this.occupiesTotal.push(i + "," + (c - 1) + "," + this.boardId);
+                if (c + 1 < 10) this.occupiesTotal.push(i + "," + (c + 1) + "," + this.boardId);
+
+                this.occupiesTotal.push(i + "," + c + "," + this.boardId);
+
+            }
+ 
+
+        }
+
+
+    }
+
+    occupyHelper = () => {
+        this.occupyTotal();
+        this.occupyTotalBoard();
+        this.occupyShip();
     }
 
     canPlace = () => {
@@ -483,61 +608,14 @@ class Ship {
 
     }
 
-    occupyTotal = () => {
-        
-        
-        this.unoccupyTotal();
-        
+    revertStateOfBoard = () => {
 
-        const r = Number.parseInt(this.r);
-        const c = Number.parseInt(this.c);
-
-        
-        if (this.orientation === "H") {
-
-            if (c - 1 >= 0) this.occupiesTotal.push(r + "," + (c - 1) + "," + this.boardId);
-            if (c + this.noOfTiles < 10) this.occupiesTotal.push(r + "," + (c + this.noOfTiles) + "," + this.boardId);
-
-            for (let i = c - 1; i < c + this.noOfTiles + 1; i++) {
-
-                if (i < 0 || i >= 10) continue;
-
-                if (r - 1 >= 0) this.occupiesTotal.push((r - 1) + "," + i + "," + this.boardId);
-                if (r + 1 < 10) this.occupiesTotal.push((r + 1) + "," + i + "," + this.boardId);
-
-                this.occupiesTotal.push(r + "," + i + "," + this.boardId);
-
-            }
-
-            
-
-        } else {
-
-            if (r - 1 >= 0) this.occupiesTotal.push((r - 1) + "," + c + "," + this.boardId);
-            if (r + this.noOfTiles < 10) this.occupiesTotal.push((r + this.noOfTiles) + "," + c + "," + this.boardId);
-
-            for (let i = r - 1; i < r + this.noOfTiles + 1; i++) {
-
-                if (i < 0 || i >= 10) continue;
-                
-                if (c - 1 >= 0) this.occupiesTotal.push(i + "," + (c - 1) + "," + this.boardId);
-                if (c + 1 < 10) this.occupiesTotal.push(i + "," + (c + 1) + "," + this.boardId);
-
-                this.occupiesTotal.push(i + "," + c + "," + this.boardId);
-
-            }
- 
-
+        for (const ship of Object.values(this.ships)) {
+            ship.occupyTotal();
+            ship.occupyTotalBoard();
         }
-
-
     }
 
-    occupyHelper = () => {
-        this.occupyTotal();
-        this.occupyTotalBoard();
-        this.occupyShip();
-    }
 
     checkClickValidity = (ship) => {
 
@@ -584,14 +662,34 @@ class Ship {
 
     }
 
-    revertStateOfBoard = () => {
+    validityAnimation = async (ship) => {
+        const keyframes = [
+            'translate(1px, 1px) rotate(0deg)',
+            'translate(-1px, -2px) rotate(-1deg)',
+            'translate(-3px, 0px) rotate(1deg)',
+            'translate(3px, 2px) rotate(0deg)',
+            'translate(1px, -1px) rotate(1deg)',
+            'translate(-1px, 2px) rotate(-1deg)',
+            'translate(-3px, 1px) rotate(0deg)',
+            'translate(3px, 1px) rotate(-1deg)',
+            'translate(-1px, -1px) rotate(1deg)',
+            'translate(1px, 2px) rotate(0deg)',
+            'translate(1px, -2px) rotate(-1deg)'
+        ];
 
-        for (const ship of Object.values(this.ships)) {
-            ship.occupyTotal();
-            ship.occupyTotalBoard();
+        let cnt = 0;
+        while (cnt < 11) {
+            await this.sleep(20);
+            ship.style.transform = keyframes[cnt];
+            if (cnt % 2 === 0) {
+                ship.style.borderColor = "red";
+            } else {
+                ship.style.borderColor = "";
+            }
+            cnt++;
         }
-
-        
+        ship.style.borderColor = "";
+        ship.style.transform = "translate(-1px, 2px)";
     }
 
 }
@@ -607,6 +705,7 @@ class Carrier extends Ship {
         const parent = ship.parentElement;
         
         if (!this.checkClickValidity(this)) {
+            this.validityAnimation(ship);
             this.revertStateOfBoard();
         }
 
@@ -714,6 +813,7 @@ class Cruiser extends Ship {
         const parent = ship.parentElement;
         
         if (!this.checkClickValidity(this)) {
+            this.validityAnimation(ship);
             this.revertStateOfBoard();
         }
 
@@ -803,6 +903,7 @@ class Destroyer extends Ship {
         const parent = ship.parentElement;
 
         if (!this.checkClickValidity(this)) {
+            this.validityAnimation(ship);
             this.revertStateOfBoard();
         }
 
@@ -1221,9 +1322,9 @@ class Game {
                 
                 if (!data.gameOver && !data.isMissingPlayer && data.state.player1 !== null && data.state.player2 !== null) {
 
-                    data.gameOver = true;
-                    socketData.stompClient.send(`/app/game/${data.state.gameId}`, {}, JSON.stringify(data));
-                    return; 
+                    // data.gameOver = true;
+                    // socketData.stompClient.send(`/app/game/${data.state.gameId}`, {}, JSON.stringify(data));
+                    // return; 
                     // // game over end
 
 
@@ -1273,7 +1374,17 @@ class Game {
                         // add chat
                         this.chatElements = this.createChat(user, data.state.gameId, socketData.stompClient);
 
-                        
+                        // add leave game option
+                        const leaveGame = document.getElementById("leave-game");
+                        const leaveLink = document.createElement("a");
+                        leaveLink.textContent = "Leave game";
+                        leaveLink.addEventListener("click", (ev) => {
+                            ev.preventDefault();
+                            location.reload();
+                        });
+
+                        leaveGame.appendChild(leaveLink);
+
                         opposingBoard.forEach(box => {
                             box.addEventListener("click", () => {
                                 

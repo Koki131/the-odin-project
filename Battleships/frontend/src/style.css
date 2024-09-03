@@ -39,7 +39,7 @@
     width: 100vw;
     height: 100vh;
     display: grid;
-    grid-template: 0.8fr 0.8fr 0.8fr 9fr 5fr / 1fr;
+    grid-template: 0.3fr 0.8fr 0.8fr 0.8fr 9fr 5fr / 1fr;
 }
 
 #rematch-container {
@@ -73,6 +73,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+#leave-game {
+    text-align: end;
+    margin: 1rem;
 }
 
 #game-buttons {
