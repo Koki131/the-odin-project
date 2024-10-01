@@ -43,7 +43,7 @@ function EduSection() {
 function MiscSection() {
     return (
         <>
-            <div className="image">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ex ad dignissimos libero molestias error amet quam velit laborum accusantium placeat cupiditate officia consectetur, expedita eos est aliquam atque sunt. Dolor!</div>    
+            <div className="image"><img style={{borderRadius: "50%", width: "100px",height: "100px"}} src="https://byuc.wordpress.com/wp-content/uploads/2012/07/avat-2.jpg" alt="" /></div>    
             <div className="tech-stack"></div>    
             <div className="languages"></div>    
             <div className="certificates"></div>    
