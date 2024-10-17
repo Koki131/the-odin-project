@@ -8,9 +8,11 @@ export default function IntroSection() {
 
     const [aboutDetails, setAboutDetails] = useState(new Map());
     const [promptOptions, setPromptOptions] = useState({id: "", promptOpen: false, type: ""});
+    const [name, setName] = useState("");
+    const [summary, setSummary] = useState("");
     const textareaRef = useRef(null);
-    const introRefs = useRef([]);
     const editRefs = useRef([]);
+    const nameRef = useRef(null);
 
     const adjustHeight = () => {
         const textarea = textareaRef.current;
@@ -52,6 +54,14 @@ export default function IntroSection() {
             textarea.removeEventListener('input', adjustHeight);
         };
     }, []);
+
+    const handleName = (e) => {
+        setName(e.target.value);
+    };
+
+    const handleSummary = (e) => {
+        setSummary(e.target.value)
+    };
 
     const copyDetails = () => {
         const temp = new Map();
@@ -124,13 +134,29 @@ export default function IntroSection() {
         setAboutDetails(temp); 
     };
 
-    
+    const displayNameInput = () => {
+        nameRef.current.style.visibility = "visible";
+    };
 
+    const hideNameInput = () => {
+        nameRef.current.style.visibility = "hidden";
+    };
+
+    const displaySummaryInput = () => {
+        textareaRef.current.style.visibility = "visible";
+    };
+
+    const hideSummaryInput = () => {
+        textareaRef.current.style.visibility = "hidden";
+    };
 
     return (
         <>
-            <div className="name">
-                <input type="text" name="name" placeholder="Enter name" style={{ fontSize: '30px' }} />
+            <div className="name" onMouseEnter={displayNameInput} onMouseLeave={hideNameInput}>
+                {name.trim() === "" ? (<h1>Placeholder name (hover)</h1>) : <h1>{name}</h1>}
+                <div ref={nameRef} className='name-div' style={{visibility: "hidden"}}>
+                    <input onChange={(e) => handleName(e)} type="text" name="name" placeholder="Enter name" style={{ fontSize: '30px'}} />
+                </div>
             </div>    
             <div className="links">
                 <div className="options">
@@ -139,12 +165,11 @@ export default function IntroSection() {
                             if (detail.image !== null || detail.text !== "") {
 
                                 editRefs.current[detail.id] = editRefs.current[detail.id] || React.createRef();
-                                introRefs.current[detail.id] = introRefs.current[detail.id] || React.createRef();
-                                
+
                                 
                                 if (detail.elType === "link") {
                                     return <div key={detail.id} className='intro-item' onMouseEnter={() => displayOptions(detail.id)} onMouseLeave={() => hideOptions(detail.id)}>
-                                                <a className="intro-text" ref={introRefs.current[detail.id]} href={detail.link} target='blank'>
+                                                <a className="intro-text"  href={detail.link} target='blank'>
                                                     {detail.image !== null ? <img src={detail.image} alt="" /> : null}
                                                     <p>{detail.text}</p>
                                                     <span>|</span>
@@ -160,7 +185,7 @@ export default function IntroSection() {
                                             </div>
                                 }
                                 return <div key={detail.id} className='intro-item' onMouseEnter={() => displayOptions(detail.id)} onMouseLeave={() => hideOptions(detail.id)}>
-                                            <div className="intro-text" ref={introRefs.current[detail.id]}>
+                                            <div className="intro-text">
                                                 <p>{detail.text}</p>
                                                 <span>|</span>
                                             </div>
@@ -178,17 +203,21 @@ export default function IntroSection() {
                     }
                     <div className='prompt-window-container'>
                         <a href="#" className='insert-link' onClick={() => openSelectionWindow(aboutDetails.size, "")}>Insert</a>
-                        {promptOptions.promptOpen && <PromptWindow onClose={() => openSelectionWindow("", "")} aboutDetails={aboutDetails} setAboutDetails={setAboutDetails} addNewEntry={addNewEntry}
+                        {promptOptions.promptOpen && <PromptWindow onClose={() => openSelectionWindow("", "")} aboutDetails={aboutDetails} addNewEntry={addNewEntry}
                             handleImage={handleImage} handleText={handleText} handleLink={handleLink} initState={promptOptions.type} id={promptOptions.id}/>}
                     </div>
                 </div>
             </div>    
-            <div className="about">
-                <p>Summary</p>
+            <div className="about" onMouseEnter={displaySummaryInput} onMouseLeave={hideSummaryInput}>
+                <h3>Summary</h3>
+                <p>{summary === "" ? "Placeholder summary (hover)" : summary}</p>
                 <textarea
+                    className='summary'
                     ref={textareaRef}
+                    onChange={(e) => handleSummary(e)}
                     name="name"
                     placeholder="Write something about yourself"
+                    style={{visibility: "hidden"}}
                 />
             </div>
 
