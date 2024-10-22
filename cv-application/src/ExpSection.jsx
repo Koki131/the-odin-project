@@ -10,6 +10,8 @@ export default function ExpSection() {
     const editPopupRefs = useRef([]);
     const editExpRefs = useRef([]);
     const parentContainer = useRef(null);
+    const experienceAddRef = useRef(null);
+    const experienceData = useRef(null);
 
 
     const handleDataUpdate = (section) => {
@@ -176,78 +178,94 @@ export default function ExpSection() {
 
     };
 
-    
+    const addExperience = () => {
+        experienceData.current.style.display = "block";
+        experienceAddRef.current.style.display = "none";
+    };
+
+    const removeExperience = () => {
+        experienceData.current.style.display = "none";
+        experienceAddRef.current.style.display = "block";
+    };
 
     return (
         <>
-            <h3>Experience</h3>
+            
             <div ref={parentContainer} className="exp-container">
-                {
-                    Object.values(sections).map(section => {
+                <a ref={experienceAddRef} className="ignore" href="#" onClick={addExperience}>Add Experience</a>
+                <div ref={experienceData} style={{display: "none"}}>
+                    <div className="exp-header">
+                        <h3>Experience</h3>
+                        <a href="#" className="ignore" onClick={removeExperience}>Remove</a>
+                    </div>
+                    {
+                        Object.values(sections).map(section => {
 
-                            if (section.workplace !== "" || section.date !== "" || section.bulletPoints.length >= 1) {
+                                if (section.workplace !== "" || section.date !== "" || section.bulletPoints.length >= 1) {
 
-                                editPopupRefs.current[section.id] = editPopupRefs.current[section.id] || React.createRef();
-                                editExpRefs.current[section.id] = editExpRefs.current[section.id] || React.createRef();
-    
-                                return <div style={{marginTop: "10px"}} onMouseEnter={(e) => displayOptions(section.id, e)} onMouseLeave={(e) => hideOptions(section.id, e)} key={section.id}>
-                                        <h4>{section.workplace}</h4>
-                                        <p style={{opacity: "0.6"}}>{section.date}</p>
-                                        <ul>
-                                            {
-                                                
-                                                Object.keys(section.bulletPoints).map((key) => {
-                                                    const val = section.bulletPoints[key];
-                                                    return <li key={key}>{val}</li>
-                                                })
-                                            }
-                                        </ul>
-                                        <div  ref={editPopupRefs.current[section.id]} className='exp-edit-options' style={{visibility: "hidden"}}>
-                                            <a className="edit-link" href="#" onClick={() => openSelectionWindow(section.id)}>
-                                                <img src={editImg} alt="" />
-                                            </a>
-                                            <a className="delete-link" href="#" onClick={() => deleteEntry(section.id)}>
-                                                <img src={deleteImg} alt="" />
-                                            </a>
-                                        </div>
-                                        <div ref={editExpRefs.current[section.id]} className='exp-edit' style={{visibility: "hidden"}}>
-                                            <div className='exp-close-button'>
-                                                <button onClick={(e) => closeSelectionWindow(section.id, e)}>Close</button>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    <p>Workplace/Project</p>
-                                                    <input type="text" onChange={(e) => updateExperience("workplace", section.id, null, e)} value={section.workplace} />
-                                                </div>
-                                                <div>
-                                                    <p>Date</p>
-                                                    <input type="text" onChange={(e) => updateExperience("date", section.id, null, e)} value={section.date} />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <p>Bullet Points</p>
+                                    editPopupRefs.current[section.id] = editPopupRefs.current[section.id] || React.createRef();
+                                    editExpRefs.current[section.id] = editExpRefs.current[section.id] || React.createRef();
+        
+                                    return <div style={{marginTop: "10px"}} onMouseEnter={(e) => displayOptions(section.id, e)} onMouseLeave={(e) => hideOptions(section.id, e)} key={section.id}>
+                                            <h4>{section.workplace}</h4>
+                                            <p style={{opacity: "0.6"}}>{section.date}</p>
+                                            <ul>
                                                 {
-                                                    Object.keys(section.bulletPoints).map(key => {
+                                                    
+                                                    Object.keys(section.bulletPoints).map((key) => {
                                                         const val = section.bulletPoints[key];
-                                                        return <input className="bullet-input" key={key} onChange={(e) => updateExperience("bullet", section.id, key, e)} type="text" value={val}/>
+                                                        return <li key={key}>{val}</li>
                                                     })
                                                 }
+                                            </ul>
+                                            <div  ref={editPopupRefs.current[section.id]} className='exp-edit-options' style={{visibility: "hidden"}}>
+                                                <a className="edit-link" href="#" onClick={() => openSelectionWindow(section.id)}>
+                                                    <img src={editImg} alt="" />
+                                                </a>
+                                                <a className="delete-link" href="#" onClick={() => deleteEntry(section.id)}>
+                                                    <img src={deleteImg} alt="" />
+                                                </a>
                                             </div>
-                                            <a href="#" className="add-bullet" onClick={(e) => updateExperience("add-bullet", section.id, null, e)}>Add</a>
-    
+                                            <div ref={editExpRefs.current[section.id]} className='exp-edit' style={{visibility: "hidden"}}>
+                                                <div className='exp-close-button'>
+                                                    <button onClick={(e) => closeSelectionWindow(section.id, e)}>Close</button>
+                                                </div>
+                                                <div>
+                                                    <div>
+                                                        <p>Workplace/Project</p>
+                                                        <input type="text" onChange={(e) => updateExperience("workplace", section.id, null, e)} value={section.workplace} />
+                                                    </div>
+                                                    <div>
+                                                        <p>Date</p>
+                                                        <input type="text" onChange={(e) => updateExperience("date", section.id, null, e)} value={section.date} />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <p>Bullet Points</p>
+                                                    {
+                                                        Object.keys(section.bulletPoints).map(key => {
+                                                            const val = section.bulletPoints[key];
+                                                            return <input className="bullet-input" key={key} onChange={(e) => updateExperience("bullet", section.id, key, e)} type="text" value={val}/>
+                                                        })
+                                                    }
+                                                </div>
+                                                <a href="#" className={`add-bullet`} onClick={(e) => updateExperience("add-bullet", section.id, null, e)}>Add</a>
+        
+                                            </div>
                                         </div>
-                                    </div>
+                                
+                                }
+                                
                             
-                            }
-                            
-                           
 
-                    })
-                }
-            </div>
-            <div className="exp-prompt-window">
-                <a href="#" className="add-exp" onClick={handlePromptWindow}>Add</a>
-                {promptOpen && <PromptWindow onClose={handlePromptWindow} id={currId} handleDataUpdate={handleDataUpdate} sections={sections} />}
+                        })
+                    }
+                    <div className="exp-prompt-window">
+                        <a href="#" className={`add-exp ignore`} onClick={handlePromptWindow}>Add</a>
+                        {promptOpen && <PromptWindow onClose={handlePromptWindow} id={currId} handleDataUpdate={handleDataUpdate} sections={sections} />}
+                    </div>
+                </div>
+                
             </div>
         </>
     );

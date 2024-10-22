@@ -6,8 +6,40 @@
     <title>CV Application</title>
   </head>
   <body>
+    <div class="pdf-button">
+      <button onclick="generatePdf()">Save as PDF</button>
+    </div>
     <div id="root">
     </div>
     <script type="module" src="/src/main.jsx"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </body>
+  <script>
+   const generatePdf = async () => {
+        const element = document.getElementById('root');
+        const elementsToIgnore = document.querySelectorAll(".ignore");
+
+        elementsToIgnore.forEach(element => {
+          element.style.visibility = "hidden";
+        });
+        
+        const options = {
+          margin:       0,
+          filename:     'Resume.pdf',
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2},
+          jsPDF:        { unit: 'px', format: [595, 842], orientation: 'portrait' } 
+        };
+        
+        html2pdf()
+          .from(element)
+          .set(options)
+          .save()
+          .then(() => {
+            elementsToIgnore.forEach(element => {
+              element.style.visibility = "visible";
+            });
+          });
+      };
+  </script>
 </html>

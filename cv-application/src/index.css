@@ -11,7 +11,7 @@ body {
 }
 #root {
   position: relative;
-  top: 5%;
+  top: 2%;
   background-color: white;
   width: 595px;
   height: 842px;
@@ -31,7 +31,7 @@ body {
 }
 
 
-input, textarea {
+input[type="text"], textarea {
   width: 100%;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   border: none;
@@ -48,6 +48,10 @@ input:focus, textarea:focus {
   gap: 1rem;
   height: auto;
 }
+#intro, #experience {
+  width: calc(595px - 150px - 3rem);
+}
+
 
 #intro .name {
   display: flex;
@@ -77,7 +81,7 @@ input:focus, textarea:focus {
   color: rgb(238, 133, 63);
 }
 #intro .about {
-  max-width: 450px;
+  max-width: 400px;
 }
 #intro .about p {
   margin-bottom: 0.2rem;
@@ -85,7 +89,7 @@ input:focus, textarea:focus {
 }
 #intro .summary {
   position: absolute;
-  max-width: 450px;
+  max-width: 400px;
   z-index: 100;
 }
 
@@ -115,11 +119,16 @@ input:focus, textarea:focus {
 .intro-item p {
   font-size: 0.7rem;
 }
-.intro-text > * {
-  margin-right: 3px;
+.intro-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.intro-item p, .intro-text {
-  margin-right: 3px;
+.intro-text > *, .insert-link, .prompt-window-container span {
+  padding: 2px;
+}
+.prompt-window-container span {
+  font-size: 0.7rem;
 }
 
 .intro-item img {
@@ -173,7 +182,7 @@ input:focus, textarea:focus {
 }
 #experience {
   grid-area: experience;
-  max-width: 450px;
+  max-width: 400px;
 }
 
 #education {
@@ -185,16 +194,10 @@ input:focus, textarea:focus {
 #education .edu-container {
   max-width: 563px;
   overflow-wrap: break-word;
+  position: relative;
 }
 
-#misc {
-  grid-area: misc;
-  display: grid;
-}
-#misc .image {
-  display: flex;
-  justify-content: end;
-}
+
 .prompt-window-container {
   position: relative;
   display: flex;
@@ -299,6 +302,13 @@ input[type="file"] {
   margin-left: 2rem;
   overflow-wrap: break-word;
 }
+.edu-form {
+  position: absolute;
+}
+.edu-form, .edu-form textarea {
+  width: 100%;
+  height: 100%;
+}
 
 .ref-index .ref-popup > * {
   position: absolute;
@@ -318,4 +328,59 @@ input[type="file"] {
   max-width: 563px;
   overflow-wrap: break-word;
 }
+.ref-header, .edu-header, .exp-header, .summary-header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.ref-header h3, .edu-header h3, .exp-header h3, .summary-header h3 {
+  margin-right: auto;
+}
+#misc {
+  grid-area: misc;
+  display: grid;
+  grid-template-rows: 0.5fr auto;
+  max-width: 150px;
+  gap: 5px;
+}
+.image {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+.image img {
+  width: 150px;
+  height: 150px;
+}
 
+.image .image-radius {
+  width: 150px;
+}
+
+.image .misc-file-upload {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.misc-prompt {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-color: white;
+  z-index: 100;
+}
+
+.misc-prompt > * {
+  margin-bottom: 5px;
+}
+
+.pdf-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+.pdf-button button {
+  padding: 5px;
+}

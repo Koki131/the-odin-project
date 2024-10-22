@@ -13,6 +13,8 @@ export default function IntroSection() {
     const textareaRef = useRef(null);
     const editRefs = useRef([]);
     const nameRef = useRef(null);
+    const aboutAddRef = useRef(null);
+    const aboutRef = useRef(null);
 
     const adjustHeight = () => {
         const textarea = textareaRef.current;
@@ -150,6 +152,15 @@ export default function IntroSection() {
         textareaRef.current.style.visibility = "hidden";
     };
 
+    const addSummary = () => {
+        aboutAddRef.current.style.display = "none";
+        aboutRef.current.style.display = "block";
+    };
+    const removeSummary = () => {
+        aboutAddRef.current.style.display = "block";
+        aboutRef.current.style.display = "none";
+    };
+
     return (
         <>
             <div className="name" onMouseEnter={displayNameInput} onMouseLeave={hideNameInput}>
@@ -171,8 +182,8 @@ export default function IntroSection() {
                                     return <div key={detail.id} className='intro-item' onMouseEnter={() => displayOptions(detail.id)} onMouseLeave={() => hideOptions(detail.id)}>
                                                 <a className="intro-text"  href={detail.link} target='blank'>
                                                     {detail.image !== null ? <img src={detail.image} alt="" /> : null}
-                                                    <p>{detail.text}</p>
                                                     <span>|</span>
+                                                    <p>{detail.text}</p>
                                                 </a>
                                                 <div ref={editRefs.current[detail.id]} className='edit-options' style={{display: "none"}}>
                                                     <a className="edit-link" href="#" onClick={() => openSelectionWindow(detail.id, detail.elType)}>
@@ -186,12 +197,12 @@ export default function IntroSection() {
                                 }
                                 return <div key={detail.id} className='intro-item' onMouseEnter={() => displayOptions(detail.id)} onMouseLeave={() => hideOptions(detail.id)}>
                                             <div className="intro-text">
-                                                <p>{detail.text}</p>
                                                 <span>|</span>
+                                                <p>{detail.text}</p>
                                             </div>
                                             <div ref={editRefs.current[detail.id]} className='edit-options' style={{display: "none"}}>
                                                 <a className="edit-link" href="#" onClick={() => openSelectionWindow(detail.id, detail.elType)}>
-                                                            <img src={editImg} alt="" />
+                                                    <img src={editImg} alt="" />
                                                 </a>
                                                 <a className="delete-link" href="#" onClick={() => deleteEntry(detail.id)}>
                                                     <img src={deleteImg} alt="" />
@@ -202,14 +213,21 @@ export default function IntroSection() {
                         })
                     }
                     <div className='prompt-window-container'>
-                        <a href="#" className='insert-link' onClick={() => openSelectionWindow(aboutDetails.size, "")}>Insert</a>
+                        {aboutDetails.size > 0 && <span>|</span>}
+                        <a href="#" className={`insert-link ignore`} onClick={() => openSelectionWindow(aboutDetails.size, "")}>Insert</a>
                         {promptOptions.promptOpen && <PromptWindow onClose={() => openSelectionWindow("", "")} aboutDetails={aboutDetails} addNewEntry={addNewEntry}
                             handleImage={handleImage} handleText={handleText} handleLink={handleLink} initState={promptOptions.type} id={promptOptions.id}/>}
                     </div>
                 </div>
+            </div>
+            <div ref={aboutAddRef}>
+                <a className="ignore" href="#" onClick={addSummary}>Add Summary</a>
             </div>    
-            <div className="about" onMouseEnter={displaySummaryInput} onMouseLeave={hideSummaryInput}>
-                <h3>Summary</h3>
+            <div ref={aboutRef} className="about" onMouseEnter={displaySummaryInput} onMouseLeave={hideSummaryInput} style={{display: "none"}}>
+                <div className="summary-header">
+                    <h3>Summary</h3>
+                    <a className="ignore" href="#" onClick={removeSummary}>Remove</a>
+                </div>
                 <p>{summary === "" ? "Placeholder summary (hover)" : summary}</p>
                 <textarea
                     className='summary'

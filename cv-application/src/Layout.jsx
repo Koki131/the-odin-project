@@ -3,9 +3,8 @@ import PopupSection from "./PopupSection";
 import ExpSection from "./ExpSection";
 import EduSection from "./EduSection";
 import RefSection from "./RefSection";
-import { popupOptions } from "./select";
+import MiscSection from "./MiscSection";
 
-// popupOptions(document.getElementById("root"));
 
 export default function Layout() {
 
@@ -31,17 +30,3 @@ export default function Layout() {
     );
 }
 
-
-
-
-
-function MiscSection() {
-    return (
-        <>
-            <div className="image"><img style={{borderRadius: "50%", width: "100px",height: "100px"}} src="https://byuc.wordpress.com/wp-content/uploads/2012/07/avat-2.jpg" alt="" /></div>    
-            <div className="tech-stack"></div>    
-            <div className="languages"></div>    
-            <div className="certificates"></div>    
-        </>
-    );
-}
