@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import editImg from './assets/edit.svg';
 import deleteImg from './assets/delete.svg';
+import plus from "./assets/plus.svg";
 
 
 export default function IntroSection() {
@@ -221,7 +222,9 @@ export default function IntroSection() {
                 </div>
             </div>
             <div ref={aboutAddRef}>
-                <a className="ignore" href="#" onClick={addSummary}>Add Summary</a>
+                <a className={`ignore add`} href="#" onClick={addSummary}><svg fill="#3f7cee" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                </svg>Summary</a>
             </div>    
             <div ref={aboutRef} className="about" onMouseEnter={displaySummaryInput} onMouseLeave={hideSummaryInput} style={{display: "none"}}>
                 <div className="summary-header">

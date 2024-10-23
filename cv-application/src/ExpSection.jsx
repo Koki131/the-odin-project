@@ -185,14 +185,16 @@ export default function ExpSection() {
 
     const removeExperience = () => {
         experienceData.current.style.display = "none";
-        experienceAddRef.current.style.display = "block";
+        experienceAddRef.current.style.display = "flex";
     };
 
     return (
         <>
             
             <div ref={parentContainer} className="exp-container">
-                <a ref={experienceAddRef} className="ignore" href="#" onClick={addExperience}>Add Experience</a>
+                <a ref={experienceAddRef} className={`ignore add`} href="#" onClick={addExperience}><svg fill="#3f7cee" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                </svg>Experience</a>
                 <div ref={experienceData} style={{display: "none"}}>
                     <div className="exp-header">
                         <h3>Experience</h3>

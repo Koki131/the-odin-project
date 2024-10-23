@@ -190,43 +190,42 @@ const PopupSection = ({parentElement}) => {
                 position: "absolute",
                 left: `${popupLocation.x}px`,
                 top: `${popupLocation.y}px`,
-                width: "300px",
-                height: "100px",
                 boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
                 backgroundColor: "white",
                 zIndex: "999"
             }}
         >
 
-            <div>
-                <select className="font-family" onChange={handleStyleChange} defaultValue={textStyle["font-family"]}>
-                    {
-                        fonts.map((font, index) => {
-                            return <option key={index} value={font.name}>
-                                {font.name}
-                            </option>
-                       }) 
-                    }
-                </select>
-                <select className="font-size" onChange={handleStyleChange} defaultValue={parseInt(textStyle["font-size"])}>
-                    {
-                        
-                        Array.from({length: 100}, (_, i) => {
-                            return <option key={i} value={i}>
-                                {i + 1}px
-                            </option>  
-                        })
-                    }
-                </select>
-                <button className="font-weight" value={"bold"} onClick={handleStyleChange} style={{width: "30px"}}>
-                    B
-                </button>
-                <button className="font-style" value={"italic"} onClick={handleStyleChange} style={{width: "30px"}}>
-                    I
-                </button>
+            <div className="popup-container"> 
+                <div className="select-container">
+                    <select className="font-family" onChange={handleStyleChange} defaultValue={textStyle["font-family"]}>
+                        {
+                            fonts.map((font, index) => {
+                                return <option key={index} value={font.name}>
+                                    {font.name}
+                                </option>
+                        }) 
+                        }
+                    </select>
+                    <select className="font-size" onChange={handleStyleChange} defaultValue={parseInt(textStyle["font-size"])}>
+                        {
+                            
+                            Array.from({length: 100}, (_, i) => {
+                                return <option key={i} value={i}>
+                                    {i + 1}px
+                                </option>  
+                            })
+                        }
+                    </select>
+                    <button className="font-weight" value={"bold"} onClick={handleStyleChange} style={{width: "30px"}}>
+                        B
+                    </button>
+                    <button className="font-style" value={"italic"} onClick={handleStyleChange} style={{width: "30px"}}>
+                        I
+                    </button>
+                </div>
                 <input style={{width: "50px", height: "30px"}} className="font-color" type="color" onChange={handleStyleChange} value={textStyle["color"]}/>
             </div>
-            <div></div>
 
         </div>,
         document.body

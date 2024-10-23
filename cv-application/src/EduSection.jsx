@@ -15,6 +15,7 @@ export default function EduSection() {
     const displayEduForm = () => {
         eduForm.current.style.visibility = "visible";
     };
+    
     const hideEduForm = () => {
         eduForm.current.style.visibility = "hidden";
     };
@@ -26,13 +27,15 @@ export default function EduSection() {
 
     const removeEducation = () => {
         educationRef.current.style.display = "none";
-        educationAddRef.current.style.display = "block";
+        educationAddRef.current.style.display = "flex";
     };
 
     return (
         <>  
             <div className="edu-container" onMouseEnter={displayEduForm} onMouseLeave={hideEduForm}>
-                <a className="ignore" ref={educationAddRef} href="#" onClick={addEducation}>Add Education</a>
+                <a ref={educationAddRef} className={`ignore add`} href="#" onClick={addEducation}><svg fill="#3f7cee" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                </svg>Education</a>
                 <div ref={educationRef} style={{display: "none"}}>
                     <div className="edu-header">
                         <h3>Education</h3>

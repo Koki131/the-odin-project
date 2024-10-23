@@ -17,7 +17,7 @@ body {
   height: 842px;
   margin: 0 auto;
   padding: 1rem;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   display: grid;
   grid-template-areas: 
     "intro intro misc"
@@ -33,7 +33,7 @@ body {
 
 input[type="text"], textarea {
   width: 100%;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   border: none;
   resize: none;
 }
@@ -62,7 +62,7 @@ input:focus, textarea:focus {
   position: absolute;
   top: 6%;
   z-index: 100;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   border: 1px solid rgb(209, 209, 209);
 }
 
@@ -74,12 +74,26 @@ input:focus, textarea:focus {
 }
 #intro .links .options a {
   font-size: 0.7rem;
+}  
+a {
   text-decoration: none;
   color: rgb(63, 124, 238);
-}  
+}
+a:hover {
+  color: rgb(238, 133, 63);
+}
+a:hover svg {
+  fill: rgb(238, 133, 63);
+}
+svg {
+  width: 20px;
+  height: 20px;
+}
+
 #intro .links .options a:hover {
   color: rgb(238, 133, 63);
 }
+
 #intro .about {
   max-width: 400px;
 }
@@ -151,7 +165,7 @@ input:focus, textarea:focus {
   position: relative;
   background-color: white;
   z-index: 2;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   border-radius: 50%;
   padding: 3px;
   margin: 5px;
@@ -161,7 +175,7 @@ input:focus, textarea:focus {
   position: relative;
   background-color: white;
   z-index: 2;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   border-radius: 50%;
   padding: 3px;
   margin: 5px;
@@ -208,7 +222,7 @@ input:focus, textarea:focus {
   background-color: white;
   padding: 20px;
   z-index: 2;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -235,7 +249,7 @@ input:focus, textarea:focus {
   background-color: white;
   width: 200px;
   z-index: 2;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -312,7 +326,7 @@ input[type="file"] {
 
 .ref-index .ref-popup > * {
   position: absolute;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   z-index: 1000;
   top: 0;
   width: 100%;
@@ -364,7 +378,7 @@ input[type="file"] {
 }
 
 .misc-prompt {
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   background-color: white;
   z-index: 100;
 }
@@ -379,8 +393,26 @@ input[type="file"] {
   align-items: center;
   justify-content: center;
   padding: 5px;
+  
 }
 
-.pdf-button button {
-  padding: 5px;
+button {
+  padding: 0.5rem;
+}
+.popup-container {
+  padding: 1rem;
+}
+.popup-container select {
+  padding: 0.5rem;
+}
+
+.popup-container .select-container > * {
+  margin-right: 0.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.add {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }

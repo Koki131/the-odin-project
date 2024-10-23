@@ -54,7 +54,7 @@ export default function RefSection() {
 
     const removeReferences = () => {
         referecesRef.current.style.display = "none";
-        referencesAddRef.current.style.display = "block";
+        referencesAddRef.current.style.display = "flex";
     };
  
 
@@ -62,7 +62,9 @@ export default function RefSection() {
         <>
 
             <div className="ref-container">
-                <a className="ignore" ref={referencesAddRef} href="#" onClick={addReferences}>Add References</a>
+                <a ref={referencesAddRef} className={`ignore add`} href="#" onClick={addReferences}><svg fill="#3f7cee" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                </svg>References</a>
                 <div ref={referecesRef} style={{display: "none"}}>
                     <div className="ref-header">
                         <h3>References</h3>
