@@ -1,0 +1,12 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.card {
+  transition: transform 0.5s ease;
+  transform-style: preserve-3d;
+}
+.card:hover {
+  cursor: pointer;
+}
