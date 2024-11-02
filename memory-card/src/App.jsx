@@ -6,29 +6,43 @@ let bestScore = 0;
 function App() {
   
   const [pokemon, setPokemon] = useState([]);
+  const [totalPokemon, setTotalPokemon] = useState([]);
   const [score, setScore] = useState(0);
 
   useEffect(() => {
-
-    const names = ["pikachu", "squirtle", "charizard", "ditto", "swampert", "suicune", "zoroark", "torterra", "bulbasaur", "donphan", "mew", "jirachi"];
     
-
+    
     const load = async () => {
-      const data = await Promise.all(names.map(async (name) => {
 
-          const raw = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+      const total = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=151`).then(data => data.json());
+      const curr = [];
+
+      for (let i = 0; i < 12; i++) {
+        let idx = Math.floor(Math.random() * total.results.length);
+        while (curr.includes(total.results[idx])) {
+          idx = Math.floor(Math.random() * total.results.length);
+        }
+        curr.push(total.results[idx]);
+      }
+
+      const data = await Promise.all(curr.map(async (pokemon) => {
+
+          const raw = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`);
           const pokeData = await raw.json();
   
-          return {name: name, img: pokeData.sprites.front_default, clicked: false, rotate: false};
+          return {name: pokemon.name, img: pokeData.sprites.front_default, clicked: false, rotate: false};
       }));
 
       randomize(data);
       setPokemon(data);
+      setTotalPokemon(total.results);
     }
     
     load();
 
   }, []);
+
+
 
   const randomize = (data) => {
 
@@ -48,22 +62,65 @@ function App() {
 
   bestScore = Math.max(score, bestScore);
 
-  const onClick = (index) => {
+  
+  const onClick = async (index) => {
 
     
     const temp = [...pokemon];
-    temp.forEach(p => p.rotate = !p.rotate);
     
     if (temp[index].clicked === false) {
       setScore(score + 1);
       temp[index].clicked = true;
+      if (score >= 11) {
+        await addNewPokemon(temp);
+      }
     } else {
       setScore(0);
       temp.forEach(poke => poke.clicked = false);
     }
-
+      
     randomize(temp);
     setPokemon(temp);
+
+    temp.forEach(p => p.rotate = !p.rotate);
+
+    
+  };
+
+  const addNewPokemon = async (arr) => {
+      
+    const lastEl = {...arr[arr.length-1]};
+      
+    const prevTotal = [...totalPokemon];
+    
+    while (prevTotal.length > 0) {
+      
+      let rand = Math.floor(Math.random() * prevTotal.length);
+      let hasPokemon = false;
+
+      for (let i = 0; i < pokemon.length; i++) {
+        if (pokemon[i].name === prevTotal[rand].name) {
+          hasPokemon = true;
+        }
+      }
+      if (hasPokemon) {
+        rand = Math.floor(Math.random() * prevTotal.length)
+      } else {
+        const p = prevTotal[rand];
+        prevTotal.splice(rand, 1);
+        const pokeData = await fetch(`https://pokeapi.co/api/v2/pokemon/${p.name}`).then(data => data.json());
+        lastEl.name = p.name;
+        lastEl.img = pokeData.sprites.front_default;
+        lastEl.clicked = false;
+        lastEl.rotate = lastEl.rotate;
+        arr[arr.length-1] = lastEl;
+        randomize(arr);
+        setTotalPokemon(prevTotal);
+        return;
+      }
+      
+    }
+
 
   };
   
