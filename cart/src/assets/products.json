@@ -1,0 +1,398 @@
+[
+    {
+        "id": "b68db57b-7d4a-4197-acfd-e7344572e501",
+        "title": "Smartphone",
+        "price": 328.61,
+        "description": "A powerful smartphone with the latest features.",
+        "images": [
+            "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/144694078/original/42073354247a976027d92a56ded126bc59235d60/send-you-a-random-png.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "8f3c14f4-f1f0-4fba-9b25-1c460bd3d091",
+        "title": "Laptop",
+        "price": 24.98,
+        "description": "A sleek laptop designed for performance and portability.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "45185df0-3845-4cf8-a3f0-e9b9a9b47ae2",
+        "title": "Headphones",
+        "price": 174.98,
+        "description": "Wireless headphones with excellent sound quality.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "fac2d1a5-c418-4d9a-bbb8-280deb0726b8",
+        "title": "Smartwatch",
+        "price": 253.01,
+        "description": "A stylish smartwatch with fitness tracking capabilities.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "14499c91-cb35-4422-9c07-6627cf0f7ba3",
+        "title": "Tablet",
+        "price": 282.24,
+        "description": "A high-resolution tablet perfect for work and entertainment.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "7472e102-fa1e-4a0b-9a54-14bf8627733e",
+        "title": "Camera",
+        "price": 20.4,
+        "description": "A professional-grade camera for stunning photography.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "6704d22c-8781-4a74-88d1-b086f0194bbe",
+        "title": "Backpack",
+        "price": 323.91,
+        "description": "A durable backpack suitable for travel and daily use.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "cf07d199-00a2-4c65-bac1-5b5ac48bb69e",
+        "title": "Sneakers",
+        "price": 41.64,
+        "description": "Comfortable sneakers for everyday wear and sports.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "47e60e1d-a4c2-42a4-97f6-72dbb3e4152a",
+        "title": "Jacket",
+        "price": 179.51,
+        "description": "A waterproof jacket for all weather conditions.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "4a9b5f4c-29d7-4bff-831a-f6d99d2af302",
+        "title": "Coffee Maker",
+        "price": 305.01,
+        "description": "A premium coffee maker for a perfect cup every time.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "144d5c50-c953-43de-aaef-381f56348047",
+        "title": "Blender",
+        "price": 208.68,
+        "description": "A high-speed blender for smoothies and cooking.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "1aee0ec8-9264-491a-9f80-19d797a4153e",
+        "title": "Gaming Console",
+        "price": 388.01,
+        "description": "The latest gaming console for immersive gaming.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "7974c2e9-79be-49fd-ba04-13ed607f285f",
+        "title": "Desk Lamp",
+        "price": 432.8,
+        "description": "An adjustable desk lamp with LED lighting.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "9e3821b8-66fc-41ce-bfd3-ccde21c425bc",
+        "title": "Bookshelf",
+        "price": 302.2,
+        "description": "A stylish bookshelf for organizing your favorite books.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "2cd11c0d-7b08-447d-9141-33402d84c642",
+        "title": "Office Chair",
+        "price": 230.51,
+        "description": "An ergonomic office chair for maximum comfort.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "edcbf8e5-b57b-4e36-a170-429f8204d363",
+        "title": "Yoga Mat",
+        "price": 201.34,
+        "description": "A non-slip yoga mat for a better workout experience.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "3bd1511d-edcf-4faf-871d-f548bf79cb88",
+        "title": "Electric Kettle",
+        "price": 106.91,
+        "description": "A fast electric kettle with temperature control.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "129de92f-26d7-4032-b4b9-14cf3e3b505e",
+        "title": "Monitor",
+        "price": 199.2,
+        "description": "A high-definition monitor for work and gaming.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "560e5759-98d3-4e72-9c42-1c568c336873",
+        "title": "Wireless Mouse",
+        "price": 372.84,
+        "description": "A wireless mouse with a comfortable grip.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "b8d5ff19-2f6c-42ec-9702-c75fe8081e1a",
+        "title": "Keyboard",
+        "price": 221.96,
+        "description": "A mechanical keyboard with customizable keys.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "2bfcb985-2875-44b9-8656-95aa8b401805",
+        "title": "Water Bottle",
+        "price": 385.29,
+        "description": "A reusable water bottle with a sleek design.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "fa6fe180-e5a6-4fc2-85a8-123c27d8e41e",
+        "title": "Sunglasses",
+        "price": 215.47,
+        "description": "Polarized sunglasses for eye protection and style.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "fc4cd1b9-d24a-491c-a306-d6b7e7c2566d",
+        "title": "Watch",
+        "price": 369.86,
+        "description": "A classic wristwatch for timeless elegance.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "4cc5147e-7c7c-4841-921e-3fdf2b7c6c93",
+        "title": "Fitness Tracker",
+        "price": 343.57,
+        "description": "A fitness tracker to monitor your health goals.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "7387236f-79c9-430b-973b-7b9e17e7fe6b",
+        "title": "Tablet Stand",
+        "price": 60.28,
+        "description": "A sturdy stand for tablets and e-readers.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "98bc28a8-5329-4e2e-8c83-371ddf28e428",
+        "title": "Power Bank",
+        "price": 74.45,
+        "description": "A portable power bank for charging on the go.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "f6d67ee2-c33f-48dc-9d62-dad30b0c50f3",
+        "title": "Drone",
+        "price": 194.28,
+        "description": "A drone with a camera for capturing aerial views.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "9b9b0129-5c02-4dec-929e-88f224356da1",
+        "title": "Gaming Chair",
+        "price": 267.0,
+        "description": "A comfortable gaming chair for extended sessions.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "9b5066a7-0335-475a-a093-2dc1d1d17d31",
+        "title": "Cookware Set",
+        "price": 462.69,
+        "description": "A non-stick cookware set for easy cooking.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "97d9fbcf-78ca-4517-bf43-2e1f757e9d10",
+        "title": "Vacuum Cleaner",
+        "price": 277.94,
+        "description": "A powerful vacuum cleaner for effortless cleaning.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "b811e06c-b3ce-479a-927a-8d04b263737b",
+        "title": "Air Purifier",
+        "price": 164.93,
+        "description": "An air purifier for a cleaner, healthier home.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "80094a70-08e3-447d-9f33-479aee7fa6c3",
+        "title": "Bluetooth Speaker",
+        "price": 129.1,
+        "description": "A portable speaker with exceptional sound.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "e3c6ef9e-8312-41bd-aa04-4f3bdffebc18",
+        "title": "Tent",
+        "price": 41.84,
+        "description": "A durable tent for camping adventures.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "06b673b2-a1b0-4c17-b4e7-709e3aab146b",
+        "title": "Sleeping Bag",
+        "price": 349.6,
+        "description": "A cozy sleeping bag for outdoor camping trips.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "b56cc55d-ea4e-4c9b-994b-103fcff8f455",
+        "title": "Mountain Bike",
+        "price": 100.86,
+        "description": "A high-performance mountain bike for rough terrains.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    },
+    {
+        "id": "b56cc55d-ea23e-4c9b-994b-103fcff8f455",
+        "title": "City Bike",
+        "price": 70.83,
+        "description": "A mid-tier city bike for paved roads.",
+        "images": [
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png",
+            "/src/assets/placeholder.png"
+        ]
+    }
+]
