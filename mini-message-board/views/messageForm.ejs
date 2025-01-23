@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Message</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <%- include('header') %>
+        <div id="form-container">
+            <form id="message-form" action="/saveMessage" method="POST">
+                <div id="form-input">
+                    <input type="text" name="name" value="<%= message.name %>" placeholder="Username">
+                    <% if (message.error === "name" || message.error === "both") { %>
+                        <p style="color: red">* Name field must not be empty</p>
+                    <% } %>
+                    <input type="text" name="text" value="<%= message.text %>" placeholder="Message">
+                    <% if (message.error === "text" || message.error === "both") { %>
+                        <p style="color: red">* Message field must not be empty</p>
+                    <% } %>
+                </div>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

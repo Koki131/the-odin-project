@@ -1,0 +1,143 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+li {
+    list-style-type: none;
+}
+a {
+    text-decoration: none;
+}
+
+#message-user {
+    font-weight: bold;
+}
+#message-text {
+
+}
+#header-container {
+    background-color: purple;
+    position: absolute;
+    width: 100%;
+    top: 0;
+}
+#header {
+    padding: min(2vw, 2.5vh);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#header #home {
+    color: white;
+}
+#header #new-message {
+    position: absolute;
+    color: white;
+    padding: min(0.5vw, 1vh);
+    margin-right: min(1vw, 2vh);
+    right: 0;
+}
+.container {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+#wrapper {
+    background-color: white;
+    width: 50%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#messages-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#messages {
+    position: absolute;
+    width: 100%;
+    max-height: 80%;
+    left: 0;
+    overflow: auto;
+}
+#message {
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: min(0.5vw, 0.5vh);
+    display: flex;
+    justify-content: space-between;
+}
+
+#pagination {
+    position: absolute;
+    padding: min(0.5vw, 0.5vh);
+    bottom: 0;
+}
+#pages {
+    font-size: min(2vw, 2.5vh);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+#pages div, .arrow-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: min(0.5vw, 0.5vh);
+}
+
+.arrow {
+    width: min(2.5vw, 3vh);
+}
+
+#form-container {
+    background-color: white;
+    width: 50%;
+    height: 50%;
+}
+#message-form {
+    height: 100%;
+    width: 100%;
+    padding: min(1vw, 1.5vh);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#form-input {
+    display: flex;
+    flex-direction: column;
+}
+#form-input input {
+    width: auto;
+    padding: min(2vw, 3vh);
+    margin-bottom: min(2vw, 3vh);
+}
+
+#message-form button {
+    padding: min(1.5vw, 2.5vh);
+    border: none;
+    background-color: purple;
+    color: white;
+    width: 20%;
+}
+#message-form button:hover {
+    cursor: pointer;
+}
+
