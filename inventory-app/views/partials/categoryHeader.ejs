@@ -1,0 +1,15 @@
+<header>
+    <div id="header-home">
+        <a href="/">Products</a>
+    </div>
+    <div id="header-search">
+        <form id="header-form" action="/findCategory" method="GET">
+            <input id="header-form-input" type="text" name="search_data" value="<%= prevSearch %>">
+            <button id="header-form-submit" type="submit">Search</button>
+        </form>
+    </div>
+    <div id="header-links">
+        <a href="/categoryPage">Add/Remove category</a>
+        <a href="/productAddPage">Add product</a>
+    </div>
+</header>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="container">
+
+        <div id="header-container">
+            <%- include("partials/productHeader.ejs") %>
+        </div>
+        <div id="form-product-container">
+            <div id="errors">
+                <%- include("partials/errors.ejs") %>
+            </div>
+            <form id="product-form" action="/saveProduct" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="product_id" value="<%=product[0].product_id%>">
+                <div id="form-product-image-container">
+                    <div class="form-item" id="form-product-image">
+                        <div id="form-product-image-preview-container">
+                            <% const image = (product[0].image === '#' || product[0].image === null) ? '/images/placeholder.webp' : product[0].image %>
+                            <img id="form-image-preview" src="<%=image%>" alt="#">
+                        </div>
+                        <div id="form-product-image-selector">
+                            <input value="<%=product[0].image%>" onchange="setPreview()" id="form-image-upload" type="file" name="product_image" accept="image/png, image/jpeg">
+                        </div>
+                    </div>
+                    <div class="form-item" id="form-product-submit-container">
+                        <button id="form-product-submit" type="submit">Save Product</button>
+                    </div>
+                </div>
+                <div class="form-item" id="form-product-name">            
+                    <label for="product_name">Name</label>
+                    <input type="text" name="product_name" value="<%= product[0].name %>">
+                </div>
+                <div class="form-item" id="form-product-description">
+                    <label for="product_desc">Description</label>
+                    <input type="text" name="product_desc" value="<%= product[0].description%>">
+                </div>
+                <div class="form-item" id="form-category">
+                    <label for="category_name">Category</label>
+                    <select name="category_name" id="categoy_name">
+                        <% categories.forEach((category) => { %>
+                            <option value="<%= category.category_name %>" <%= product[0].category_name === category.category_name ? "selected" : ""%>><%= category.category_name %></option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="form-item" id="form-product-quantity">
+                    <label for="product_quantity">Quantity</label>
+                    <input type="text" name="product_quantity" value="<%= product[0].quantity%>">
+                </div>
+                <div class="form-item" id="form-product-price">
+                    <label for="product_price">Price</label>
+                    <input type="text" name="product_price" value="<%= product[0].price%>">
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+<script>
+    const setPreview = () => {
+
+        const preview = document.getElementById("form-image-preview");
+        const upload = document.getElementById("form-image-upload").files[0];
+
+        const fileReader = new FileReader();
+
+        fileReader.onload = (e) => {
+            preview.src = e.target.result;
+        };
+
+        fileReader.readAsDataURL(upload);
+  
+        
+    };
+</script>
+</html>

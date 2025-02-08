@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <div id="header-container">
+            <%- include("partials/categoryHeader.ejs", {prevSearch: res.prevSearch}) %>
+        </div>
+        <div id="category-container">
+            <div id="category-form-container">
+                <form action="/saveCategory" method="POST">
+                    <label for="category_name">Add Category</label>
+                    <input type="text" name="category_name">
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+            <div id="categories">
+                <% if (res.categories.length > 0) { %>
+                    <h4>Categories</h4>
+                <%}; %>
+                <div id="category-wrapper">
+                    <% res.categories.forEach(category => { %>
+                        <div id="category">
+                            <div id="category-name">
+                                <%= category.category_name %>
+                            </div>
+                            <div id="category-links">
+                                <a onclick="return confirm('Are you sure you want to delete category?')" href="/deleteCategory?categoryId=<%=category.category_id%>">Delete</a>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

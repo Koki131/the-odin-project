@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+
+        <div id="header-container">
+            <%- include("partials/productHeader.ejs", {prevSearch: res.prevSearch}) %>
+        </div>
+        <div id="data-container">
+            <div id="filter-container">
+                <% const categories = res.categories %>
+                <% const filters = res.filters %>
+                <% const filteredCategories = filters.categories ? filters.categories : [] %>
+                <form action="/applyFilter" method="POST">
+                    <div id="sort">
+                        <p style="font-weight: bold;">Sort By</p>
+                        <div id="sort-options">
+                            <select name="sort_by" id="sort_by">
+                                <option value="price" <%= filters.sortBy === "price" ? "selected" : "" %>>Price</option>
+                                <option value="name" <%= filters.sortBy === "name" ? "selected" : "" %>>Name</option>
+                            </select>
+                            <select name="sort" id="sort">
+                                <option value="asc" <%= filters.sort === "asc" ? "selected" : "" %>>Ascending</option>
+                                <option value="desc" <%= filters.sort === "desc" ? "selected" : "" %>>Descending</option>
+                            </select>
+                        </div>
+                    </div>
+                    <ul id="filter-categories">
+                        <p style="font-weight: bold;">Categories</p>
+                        <div id="filter-categories-wrapper">
+                            <% categories.forEach((category) => { %>
+                                <div id="filter-category">
+                                    <input type="checkbox" name="categories[]" value="<%=category.category_id%>" <%= filteredCategories.includes(category.category_id) ? "checked" : "" %>>
+                                    <label for="<%=category.category_name%>"><%=category.category_name%></label>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </ul>
+                    <button id="filter-submit" type="submit">Filter</button>
+                </form>
+            </div>
+            <div id="product-container">
+                <div id="product-wrapper">
+                    <% const products = res.products %>
+                    <% products.forEach((product) => { %>
+                            <div class="product">
+                                <div id="product-image">
+                                    <div id="options">
+                                        <a href="/productAddPage?productId=<%= product.product_id%>">Edit</a>
+                                        <a onClick="return confirmDelete(event)" href="/deleteProduct?productId=<%= product.product_id%>">Delete</a>
+                                    </div>
+                                    <% const image = !product.image ? '/images/placeholder.webp' : product.image %>
+                                    <img src="<%= image %>" alt="Image">
+                                </div>
+                                <div id="product-data-wrapper">
+                                    <div id="product-data">
+                                        <p><%=product.name%></p>
+                                        <p><%=product.price%></p>
+                                    </div>
+                                    <p>Quantity: <%=product.quantity%></p>
+                                </div>
+                            </div>
+                    <% }); %>
+                </div>
+            </div>
+            <div id="pagination">
+                <% let visibilityLeft = "visible" %>
+                <% let visibilityRight = "visible" %>
+                <% if (res.pageNum <= 1) { 
+                    visibilityLeft = "hidden"
+                } else {
+                    visibilityLeft = "visible"
+                }
+                    if (products.length >= 15) {
+                        visibilityRight = "visible";
+                    } else {
+                        visibilityRight = "hidden";
+                    }
+                %>
+                <a href="/?pageNum=<%= res.pageNum - 1 %>" style="visibility: <%= visibilityLeft %>">Left</a>
+                <p><%= res.pageNum %></p>
+                <a href="/?pageNum=<%= res.pageNum + 1 %>" style="visibility: <%= visibilityRight %>">Right</a>
+            </div>
+        </div>
+        
+    </div>
+</body>
+
+<script>
+    const confirmDelete = (e) => {
+        
+        if (!confirm("Are you sure you want to delete this item?")) {
+            e.preventDefault();
+            
+        }
+    };
+
+</script>
+</html>
