@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-form-container">
+        <form id="login-form" action="/register" method="POST">
+            <ul>
+                <% errors.forEach((error) => { %>
+                    <li style="color: red;"><%= error.msg %></li>
+                <% }); %>
+            </ul>
+            <h3 style="color: white">Register</h3>
+            <input type="text" name="username" placeholder="Username">
+            <input type="password" name="password" placeholder="Password">
+            <input type="password" name="matchingPassword" placeholder="Repeat password">
+            <button type="submit">Register</button>
+            <p style="color: white;">Already have an accout? <span><a style="text-decoration: none; color: teal;"href="/login">Sign in</a></span></p>
+        </form>
+    </div>
+
+</body>
+</html>

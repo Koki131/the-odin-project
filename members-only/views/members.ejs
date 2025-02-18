@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <header>
+            <%- include("partials/header.ejs") %>
+        </header>
+        <div id="article-container">
+            
+            <% articles.forEach((article) => { %>
+
+                <div id="article">
+                    <p id="article-post">
+                        <%= article.post %>
+                    </p>
+                    <div id="article-footer">
+                        <% 
+                           const t1 = Math.abs(article.timestamp.getTime());
+                           const t2 = Math.abs(new Date().getTime());
+                           const diff = Math.floor(t2 - t1);
+                           const seconds = Math.floor(diff / 1000);
+                           const minutes = Math.floor(seconds / 60);
+                           const hours = Math.floor(minutes / 60);
+                           const days = Math.floor(hours / 24);
+                           const months = Math.floor(days / 30);
+                           const years = Math.floor(months / 12);    
+                        %>
+
+                        <% if (years > 0) { %>
+                            <p>Posted: <i><%= years === 1 ? years + ' year ago' : years + ' years ago' %></i></p>
+                        <% } else if (months > 0) { %>
+                            <p>Posted: <i><%= months === 1 ? months + ' month ago' : months + ' months ago' %></i> </p>
+                        <% } else if (days > 0) { %>
+                            <p>Posted: <i><%= days === 1 ? days + ' day ago' : days + ' days ago' %></i></p>
+                        <% } else if (hours > 0) { %>
+                            <p>Posted: <i><%= hours === 1 ? hours + ' hour ago' : hours + ' hours ago' %></i></p>
+                        <% } else if (minutes > 0) { %>
+                            <p>Posted: <i><%= minutes === 1 ? minutes + ' minute ago' : minutes + ' minutes ago' %></i></p>
+                        <% } else { %>
+                            <p>Posted: <i><%= seconds === 1 ? seconds + ' second ago' : seconds + ' seconds ago' %></i></p>
+                        <% } %>
+                        <p>Author: <i><%= article.username %></i></p>
+                    </div>
+                </div>
+
+            <% }); %>
+            <div id="pagination">
+
+                <a style="visibility: <%= pageNum > 1 ? 'visible' : 'hidden' %>" href="/?pageNum=<%= Number.parseFloat(pageNum) - 1 %>">Left</a>
+                <%= pageNum == 1 ? 1 : pageNum %>
+                <a style="visibility: <%= len >= 10 ? 'visible' : 'hidden'; %>" href="/?pageNum=<%= Number.parseFloat(pageNum) + 1 %>">Right</a>
+            </div>
+        </div>
+    </div>
+    
+
+</body>
+
+</html>

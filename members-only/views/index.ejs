@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <header>
+            <%- include("partials/header.ejs") %>
+        </header>
+        <div id="article-container">
+            
+            <% articles.forEach((article) => { %>
+
+                <div id="article">
+                    <p id="article-post">
+                        <%= article.post %>
+                    </p>
+                    <div id="article-footer">
+                        <p>Posted: <i>Unknown</i></p>
+                        <p>Author: <i>Anonymous</i></p>
+                    </div>
+                </div>
+
+            <% }); %>
+            <div id="pagination">
+
+                <a style="visibility: <%= pageNum > 1 ? 'visible' : 'hidden' %>" href="/?pageNum=<%= Number.parseFloat(pageNum) - 1 %>">Left</a>
+                <%= pageNum == 1 ? 1 : pageNum %>
+                <a style="visibility: <%= len >= 10 ? 'visible' : 'hidden'; %>" href="/?pageNum=<%= Number.parseFloat(pageNum) + 1 %>">Right</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

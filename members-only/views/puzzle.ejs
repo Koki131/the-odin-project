@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-form-container" style="color: white">
+        <form style="padding: 0.7vw" id="login-form" action="/submitPuzzle" method="POST">
+            <h3>Solve riddle to become a member</h3>
+            <p>
+                I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I? 
+            </p>
+            <input type="text" name="puzzle" placeholder="Solution">
+            <button type="submit">Submit</button>
+            <p>Tries: <%= tries %></p>
+        </form>
+    </div>
+
+</body>
+</html>

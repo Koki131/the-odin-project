@@ -1,0 +1,163 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+#login-form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    flex-direction: column;
+}
+
+#login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    width: 30vw;
+    height: 50vh;
+}
+#login-form > * {
+    margin: 0.5vw;
+}
+
+#login-form input {
+    width: 60%;
+    padding: 0.5vw;
+}
+
+#login-form button {
+    background-color: purple;
+    color: white;
+    padding: 0.7vw;
+    border: none;
+}
+#login-form button:hover {
+    cursor: pointer;
+}
+
+#container {
+    position: relative;
+    background-color: rgb(218, 218, 218);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    display: flex;
+    height: max(2.5vw, 2.5vh);
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    
+}
+
+#header a {
+    color: white;
+    text-decoration: none;
+    margin-left: 0.5vw;
+    transition: 0.2s ease;
+}
+#header button {
+    margin-right: 0.5vw;
+}
+
+#header a:hover {
+    color: red;
+}
+
+
+#article-container {
+    background-color: rgb(218, 218, 218);
+    display: flex;
+    width: 100%;
+    height:fit-content;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: max(2.5vw, 2.5vh);
+}
+#article {
+    background-color: white;
+    width: 30vw;
+    margin-top: 1vw;
+    padding: 0.5vw;
+    font-size: max(0.7vw, 0.7vh);
+}
+
+#article-post {
+    word-wrap: break-word;
+    margin-bottom: 0.5vw;
+}
+
+#article-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+#pagination {
+    padding: 0.5vw;
+}
+
+#pagination a {
+    text-decoration: none;
+    color: rgb(32, 32, 239);
+}
+#pagination a:hover {
+    color: red;
+}
+
+#article-form {
+    display: flex;
+    width: 100%;
+    height:fit-content;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 50vh;
+    width: 30vw;
+    margin-top: max(2.5vw, 2.5vh);
+}
+#article-form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+#article-form button {
+    border: none;
+    background-color: purple;
+    padding: 0.5vw;
+    width: 100%;
+    color: white;
+}
+#article-form button:hover {
+    cursor: pointer;
+}
+#article-form textarea {
+    border: none;
+    resize: none;
+    height: 100%;
+    width: 100%;
+    word-wrap: break-word;
+}
+
+#logout-form button {
+    border: none;
+    background-color: purple;
+    padding: 0.5vw;
+    color: white;
+}
+#logout-form button:hover {
+    cursor: pointer;
+}
