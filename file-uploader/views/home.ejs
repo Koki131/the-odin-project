@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="folder_upload_form" action="/uploadFolder" enctype="multipart/form-data" method="POST">
+        <label for="folder_upload">Upload Folder</label>
+        <input type="file" name="folder_upload" id="folder_upload" webkitdirectory multiple>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+
+<script>
+
+    const form = document.getElementById("folder_upload_form");
+
+    form.addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        const batch = [];
+        const paths = {};
+        let size = 0;
+
+        for (let file of form[0].files) {
+
+            const pathArr = file.webkitRelativePath.split("/");
+            const len = pathArr.length;
+            let path = [];
+            for (let i = 0; i < len-1; i++) {
+                const p = pathArr[i];
+                path.push(p);
+                path.push("/");
+            }
+
+            
+            let relativePath = path.join("");
+            if (!paths[relativePath]) {
+                paths[relativePath] = [];
+            }
+            paths[relativePath].push(pathArr[len-1]);
+            
+            
+            let formData = new FormData();
+
+            if (file.size <= (100 * 1024 * 1024)) {
+                
+                size += file.size;
+
+                batch.push([file, relativePath]);
+
+                if (size >= 1000 * 1024 * 1024) {
+                    while (batch.length > 0) {
+                        let popped = batch.pop();
+                        formData.append("relative_path", popped[1]);
+                        formData.append("folder_upload", popped[0]);
+                    }
+                    
+                    size = 0;
+                    await fetch("/uploadFolder", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                }
+            } else {
+                formData.append("relative_path", relativePath);
+                formData.append("folder_upload", file);
+        
+                await fetch("/uploadFolder", {
+                    method: "POST",
+                    body: formData,
+                });
+            }
+
+            file = null;
+        }
+
+        if (batch.length > 0) {
+            const formData = new FormData();
+
+            while (batch.length > 0) {
+                let popped = batch.pop();
+                formData.append("relative_path", popped[1]);
+                formData.append("folder_upload", popped[0]);
+            }
+            await fetch("/uploadFolder", {
+                method: "POST",
+                body: formData
+            });
+        }
+
+        for (const path of Object.keys(paths)) {
+            const obj = {};
+            obj[path] = paths[path];
+
+            await fetch("/savePath", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(obj),
+            });
+
+        }
+
+
+        window.location.href = "/";
+
+    });
+
+</script>
+</html>
